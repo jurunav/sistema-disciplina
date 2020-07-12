@@ -46,7 +46,7 @@ class User extends BaseModel implements
         $array = parent::toArray();
         $array['roles'] = $this->roles()->get();
         if ($mode == 'full') {
-            $array['roles'] = $this->roles()->with('perms')->get();
+            $array['roles'] = $this->roles()->with('permissions')->get();
         }
         return $array;
     }
