@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Rol;
+use Spatie\Permission\Models\Role;
 
 class RolController extends Controller
 {
@@ -15,10 +15,10 @@ class RolController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $roles = Rol::orderBy('id', 'desc')->paginate(10);
+            $roles = Role::orderBy('id', 'desc')->paginate(10);
         }
         else{
-            $roles = Rol::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(10);
+            $roles = Role::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(10);
         }
         
 
@@ -38,35 +38,36 @@ class RolController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $rol = new Rol();
-        $rol->nombre = $request->nombre;
-        $rol->descripcion = $request->descripcion;
-        $rol->condicion = '1';
+        $rol = new Role();
+        $rol->name = $request->name;
+        $rol->guard_name = 'web';
         $rol->save();
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         if (!$request->ajax()) return redirect('/');
-        $rol = Rol::findOrFail($request->id);
-        $rol->nombre = $request->nombre;
-        $rol->descripcion = $request->descripcion;
-        $rol->condicion = '1';
+        $rol = Role::find($id);
+        $rol->name = $request->name;
         $rol->save();
     }
 
-    public function desactivar(Request $request)
+    public function destroy(Request $request, $id)
     {
         if (!$request->ajax()) return redirect('/');
-        $rol = Rol::findOrFail($request->id);
-        $rol->condicion = '0';
-        $rol->save();
+        $rol = Role::findOrFail($id);
+        $rol->delete();
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @deprecated
+     */
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $rol = Rol::findOrFail($request->id);
+        $rol = Role::findOrFail($request->id);
         $rol->condicion = '1';
         $rol->save();
     }

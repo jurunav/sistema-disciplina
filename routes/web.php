@@ -46,8 +46,4 @@ Route::put('/cadete/actualizar', 'CadeteController@update');
 Route::put('/cadete/desactivar', 'CadeteController@desactivar');
 Route::put('/cadete/activar', 'CadeteController@activar');
 
-Route::get('/rol', 'RolController@index');
-Route::post('/rol/registrar', 'RolController@store');
-Route::put('/rol/actualizar', 'RolController@update');
-Route::put('/rol/desactivar', 'RolController@desactivar');
-Route::put('/rol/activar', 'RolController@activar');
+Route::resource('/rol', 'RolController');

@@ -18,8 +18,7 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="nombre">Nombre</option>
-                                      <option value="descripcion">Descripción</option>
+                                      <option value="name" selected="selected">Nombre</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarRol(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" @click="listarRol(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -31,8 +30,8 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Estado</th>
+                                    <th>Creado</th>
+                                    <th>Actualizado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,29 +40,21 @@
                                         <button type="button" @click="abrirModal('rol','actualizar',rol)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="rol.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarRol(rol.id)">
+                                        <template>
+                                            <button type="button" class="btn btn-danger btn-sm" @click="eliminarRol(rol.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarRol(rol.id)">
-                                                <i class="icon-check"></i>
-                                            </button>
-                                        </template>
+                                        <!--<template v-else>-->
+                                            <!--<button type="button" class="btn btn-info btn-sm" @click="activarRol(rol.id)">-->
+                                                <!--<i class="icon-check"></i>-->
+                                            <!--</button>-->
+                                        <!--</template>-->
                                     </td>
-                                    <td v-text="rol.nombre"></td>
-                                    <td v-text="rol.descripcion"></td>
-                                    <td>
-                                        <div v-if="rol.condicion">
-                                            <span class="badge badge-success">Activo</span>
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">Desactivado</span>
-                                        </div>
-                                        
-                                    </td>
-                                </tr>                                
+                                    <td v-text="rol.name"></td>
+                                    <td v-text="rol.created_at"></td>
+                                    <td v-text="rol.updated_at"></td>
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
@@ -98,14 +89,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre del cargo">
+                                        <input type="text" v-model="name" class="form-control" placeholder="Nombre del cargo">
                                         
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Descripción</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
                                 <div v-show="errorRol" class="form-group row div-error">
@@ -137,8 +122,7 @@
         data (){
             return {
                 rol_id: 0,
-                nombre : '',
-                descripcion : '',
+                name : '',
                 arrayRol : [],
                 modal : 0,
                 tituloModal : '',
@@ -154,7 +138,7 @@
                     'to' : 0,
                 },
                 offset : 3,
-                criterio : 'nombre',
+                criterio : 'name',
                 buscar : ''
             }
         },
@@ -214,12 +198,11 @@
                 
                 let me = this;
 
-                axios.post('/rol/registrar',{
-                    'nombre': this.nombre,
-                    'descripcion': this.descripcion
+                axios.post('/rol',{
+                    'name': this.name,
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarRol(1,'','nombre');
+                    me.listarRol(1,'','name');
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -231,20 +214,19 @@
                 
                 let me = this;
 
-                axios.put('/rol/actualizar',{
-                    'nombre': this.nombre,
-                    'descripcion': this.descripcion,
+                axios.put('/rol/'+this.rol_id,{
+                    'name': this.name,
                     'id': this.rol_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarRol(1,'','nombre');
+                    me.listarRol(1,'','name');
                 }).catch(function (error) {
                     console.log(error);
                 }); 
             },
-            desactivarRol(id){
+            eliminarRol(id){
                swal({
-                title: 'Esta seguro de desactivar este rol?',
+                title: 'Esta seguro de eliminar este rol?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -259,13 +241,13 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/rol/desactivar',{
+                    axios.delete('/rol/'+id,{
                         'id': id
                     }).then(function (response) {
-                        me.listarRol(1,'','nombre');
+                        me.listarRol(1,'','name');
                         swal(
-                        'Desactivado!',
-                        'El registro ha sido desactivado con éxito.',
+                        'Eliminado!',
+                        'El registro ha sido eliminado con éxito.',
                         'success'
                         )
                     }).catch(function (error) {
@@ -301,7 +283,7 @@
                     axios.put('/rol/activar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarRol(1,'','nombre');
+                        me.listarRol(1,'','name');
                         swal(
                         'Activado!',
                         'El registro ha sido activado con éxito.',
@@ -324,7 +306,7 @@
                 this.errorRol=0;
                 this.errorMostrarMsjRol =[];
 
-                if (!this.nombre) this.errorMostrarMsjRol.push("El nombre del rol no puede estar vacío.");
+                if (!this.name) this.errorMostrarMsjRol.push("El nombre del rol no puede estar vacío.");
 
                 if (this.errorMostrarMsjRol.length) this.errorRol = 1;
 
@@ -333,8 +315,7 @@
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombre='';
-                this.descripcion='';
+                this.name='';
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
@@ -345,8 +326,7 @@
                             {
                                 this.modal = 1;
                                 this.tituloModal = 'Registrar Rol';
-                                this.nombre= '';
-                                this.descripcion = '';
+                                this.name= '';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -357,8 +337,7 @@
                                 this.tituloModal='Actualizar Rol';
                                 this.tipoAccion=2;
                                 this.rol_id=data['id'];
-                                this.nombre = data['nombre'];
-                                this.descripcion= data['descripcion'];
+                                this.name = data['name'];
                                 break;
                             }
                         }
