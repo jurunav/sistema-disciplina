@@ -2,12 +2,24 @@
 
 namespace App;
 
+use App\Models\BaseModel;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Authenticatable
+use Spatie\Permission\Traits\HasRoles;
+
+class User extends BaseModel implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
 {
-    use Notifiable;
+    use Authenticatable, Authorizable, CanResetPassword;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +30,8 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -26,4 +40,34 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function toArray($mode = 'min')
+    {
+        $array = parent::toArray();
+        $array['roles'] = $this->roles()->get();
+        if ($mode == 'full') {
+            $array['roles'] = $this->roles()->with('perms')->get();
+        }
+        return $array;
+    }
+
+    public function can($permission, $requireAll = false)
+    {
+        if ($this->hasRole('super_admin')) {
+            return true;
+        } else {
+            return $this->can($permission, $requireAll);
+        }
+    }
+
+    public function getMaxRoleLevel() {
+        $maxLevel = 0;
+        foreach($this->roles as $role) {
+            if ($role->level > $maxLevel) {
+                $maxLevel = $role->level;
+            }
+        }
+
+        return $maxLevel;
+    }
 }
