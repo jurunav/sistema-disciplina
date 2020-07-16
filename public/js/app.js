@@ -53425,7 +53425,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             domicilio: '',
             celular: '',
             email: '',
-            arrayPersona: [],
+            encargadoList: [],
             modal: 0,
             tituloModal: '',
             tipoAccion: 0,
@@ -53476,10 +53476,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         listarPersona: function listarPersona(page, buscar, criterio) {
             var me = this;
-            var url = '/oficial?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.arrayPersona = respuesta.personas.data;
+            var data = {
+                page: page,
+                buscar: buscar,
+                criterio: criterio
+            };
+
+            axios({
+                url: '/api/encargados',
+                method: 'GET',
+                params: data
+            }).then(function (response) {
+                var respuesta = response.data.results;
+                console.log(respuesta);
+                me.encargadoList = respuesta.personas.data;
                 me.pagination = respuesta.pagination;
             }).catch(function (error) {
                 console.log(error);
@@ -53499,14 +53509,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var me = this;
 
-            axios.post('/oficial/registrar', {
-                'grado': this.grado,
-                'nombre': this.nombre,
-                'ci': this.ci,
-                'cm': this.cm,
-                'domicilio': this.domicilio,
-                'celular': this.celular,
-                'email': this.email
+            axios({
+                url: '/api/encargados',
+                method: 'POST',
+                params: {
+                    'grado': this.grado,
+                    'nombre': this.nombre,
+                    'ci': this.ci,
+                    'cm': this.cm,
+                    'domicilio': this.domicilio,
+                    'celular': this.celular,
+                    'email': this.email
+                }
             }).then(function (response) {
                 me.cerrarModal();
                 me.listarPersona(1, '', 'nombre');
@@ -53521,15 +53535,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var me = this;
 
-            axios.put('/oficial/actualizar', {
-                'grado': this.grado,
-                'nombre': this.nombre,
-                'ci': this.ci,
-                'cm': this.cm,
-                'domicilio': this.domicilio,
-                'celular': this.celular,
-                'email': this.email,
-                'id': this.persona_id
+            axios({
+                url: '/api/encargados/' + this.encargado_id,
+                method: 'PUT',
+                params: {
+                    'grado': this.grado,
+                    'nombre': this.nombre,
+                    'ci': this.ci,
+                    'cm': this.cm,
+                    'domicilio': this.domicilio,
+                    'celular': this.celular,
+                    'email': this.email,
+                    'id': this.persona_id
+                }
             }).then(function (response) {
                 me.cerrarModal();
                 me.listarPersona(1, '', 'nombre');
@@ -53659,6 +53677,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.domicilio = data['domicilio'];
                                     this.celular = data['celular'];
                                     this.email = data['email'];
+                                    this.encargado_id = data['encargado_id'];
                                     break;
                                 }
                         }
@@ -53804,8 +53823,8 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.arrayPersona, function(persona) {
-                  return _c("tr", { key: persona.id }, [
+                _vm._l(_vm.encargadoList, function(encargado) {
+                  return _c("tr", { key: encargado.persona.id }, [
                     _c(
                       "td",
                       [
@@ -53819,7 +53838,7 @@ var render = function() {
                                 return _vm.abrirModal(
                                   "persona",
                                   "actualizar",
-                                  persona
+                                  encargado.persona
                                 )
                               }
                             }
@@ -53827,7 +53846,7 @@ var render = function() {
                           [_c("i", { staticClass: "icon-pencil" })]
                         ),
                         _vm._v("  \n                                "),
-                        persona.condicion
+                        encargado.persona.condicion
                           ? [
                               _c(
                                 "button",
@@ -53836,7 +53855,9 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.desactivarPersona(persona.id)
+                                      return _vm.desactivarPersona(
+                                        encargado.persona.id
+                                      )
                                     }
                                   }
                                 },
@@ -53851,7 +53872,9 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.activarPersona(persona.id)
+                                      return _vm.activarPersona(
+                                        encargado.persona.id
+                                      )
                                     }
                                   }
                                 },
@@ -53863,31 +53886,41 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(persona.grado) }
+                      domProps: { textContent: _vm._s(encargado.persona.grado) }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(persona.nombre) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", { domProps: { textContent: _vm._s(persona.ci) } }),
-                    _vm._v(" "),
-                    _c("td", { domProps: { textContent: _vm._s(persona.cm) } }),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(persona.domicilio) }
+                      domProps: {
+                        textContent: _vm._s(encargado.persona.nombre)
+                      }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(persona.celular) }
+                      domProps: { textContent: _vm._s(encargado.persona.ci) }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(persona.email) }
+                      domProps: { textContent: _vm._s(encargado.persona.cm) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s(encargado.persona.domicilio)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s(encargado.persona.celular)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(encargado.persona.email) }
                     }),
                     _vm._v(" "),
                     _c("td", [
-                      persona.condicion
+                      encargado.persona.condicion
                         ? _c("div", [
                             _c("span", { staticClass: "badge badge-success" }, [
                               _vm._v("Activo")

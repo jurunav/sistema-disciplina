@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\BaseModel;
+use App\Models\Encargado;
 
 class Persona extends BaseModel
 {
@@ -39,6 +40,13 @@ class Persona extends BaseModel
     }
 
     public function encargado(){
-        return $this->hasOne(Cadete::class);
+        return $this->hasOne(Encargado::class);
+    }
+
+    public function toArray()
+    {
+        $array = parent::attributesToArray();
+        $array['encargado_id'] = $this->encargado->id;
+        return $array;
     }
 }

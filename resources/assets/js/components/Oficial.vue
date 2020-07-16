@@ -41,31 +41,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="persona in arrayPersona" :key="persona.id">
+                                <tr v-for="encargado in encargadoList" :key="encargado.persona.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('persona','actualizar',encargado.persona)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="persona.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarPersona(persona.id)">
+                                        <template v-if="encargado.persona.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarPersona(encargado.persona.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarPersona(persona.id)">
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarPersona(encargado.persona.id)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
                                     </td>
-                                    <td v-text="persona.grado"></td>
-                                    <td v-text="persona.nombre"></td>
-                                    <td v-text="persona.ci"></td>
-                                    <td v-text="persona.cm"></td>
-                                    <td v-text="persona.domicilio"></td>
-                                    <td v-text="persona.celular"></td>
-                                    <td v-text="persona.email"></td>
+                                    <td v-text="encargado.persona.grado"></td>
+                                    <td v-text="encargado.persona.nombre"></td>
+                                    <td v-text="encargado.persona.ci"></td>
+                                    <td v-text="encargado.persona.cm"></td>
+                                    <td v-text="encargado.persona.domicilio"></td>
+                                    <td v-text="encargado.persona.celular"></td>
+                                    <td v-text="encargado.persona.email"></td>
                                     <td>
-                                        <div v-if="persona.condicion">
+                                        <div v-if="encargado.persona.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
@@ -195,7 +195,7 @@
                 domicilio : '',
                 celular : '',
                 email : '',
-                arrayPersona : [],
+                encargadoList : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
@@ -246,10 +246,19 @@
         methods : {
             listarPersona (page,buscar,criterio){
                 let me=this;
-                var url= '/oficial?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
-                axios.get(url).then(function (response) {
-                    var respuesta= response.data;
-                    me.arrayPersona = respuesta.personas.data;
+                var data = {
+                    page: page,
+                    buscar: buscar,
+                    criterio: criterio
+                };
+
+                axios({
+                    url: '/api/encargados',
+                    method: 'GET',
+                    params: data
+                }).then(function (response) {
+                    var respuesta= response.data.results;
+                    me.encargadoList = respuesta.personas.data;
                     me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
@@ -270,14 +279,18 @@
                 
                 let me = this;
 
-                axios.post('/oficial/registrar',{
-                    'grado': this.grado,
-                    'nombre': this.nombre,
-                    'ci': this.ci,
-                    'cm': this.cm,
-                    'domicilio': this.domicilio,
-                    'celular': this.celular,
-                    'email': this.email
+                axios({
+                    url: '/api/encargados',
+                    method: 'POST',
+                    params: {
+                        'grado': this.grado,
+                        'nombre': this.nombre,
+                        'ci': this.ci,
+                        'cm': this.cm,
+                        'domicilio': this.domicilio,
+                        'celular': this.celular,
+                        'email': this.email
+                    }
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -292,15 +305,19 @@
                 
                 let me = this;
 
-                axios.put('/oficial/actualizar',{
-                    'grado': this.grado,
-                    'nombre': this.nombre,
-                    'ci': this.ci,
-                    'cm': this.cm,
-                    'domicilio': this.domicilio,
-                    'celular': this.celular,
-                    'email': this.email,
-                    'id': this.persona_id
+                axios({
+                    url: '/api/encargados/'+this.encargado_id,
+                    method: 'PUT',
+                    params: {
+                        'grado': this.grado,
+                        'nombre': this.nombre,
+                        'ci': this.ci,
+                        'cm': this.cm,
+                        'domicilio': this.domicilio,
+                        'celular': this.celular,
+                        'email': this.email,
+                        'id': this.persona_id
+                    }
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -443,6 +460,7 @@
                                 this.domicilio = data['domicilio'];
                                 this.celular= data['celular'];
                                 this.email= data['email'];
+                                this.encargado_id=data['encargado_id'];
                                 break;
                             }
                         }

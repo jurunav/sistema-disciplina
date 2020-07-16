@@ -19,7 +19,7 @@ class EncargadoRepository
     public function getAll($limit =10, $offset =0, $order = [['col' => 'e.created_at', 'dir' => 'desc']],
                            $searchValue = null, $criterio = null) {
         $query = Encargado::from(Encargado::getFullTableName(). ' as e')->select('e.*')
-            ->join(Persona::getFullTableName(). ' as p', 'p.id', '=', 'e.persona_id');
+            ->leftJoin(Persona::getFullTableName(). ' as p', 'p.id', '=', 'e.persona_id');
 
 
         if (!is_null($searchValue) && !is_null($criterio)) {
