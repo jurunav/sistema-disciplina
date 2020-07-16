@@ -21,9 +21,17 @@ class Persona extends BaseModel
      */
     protected $casts = [];
 
+    /**
+     * Persona constructor.
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function cadete(){

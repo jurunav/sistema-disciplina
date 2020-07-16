@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Cadete;
 use App\Persona;
 
 class Encargado extends Persona
@@ -18,7 +17,4 @@ class Encargado extends Persona
         return $this->belongsTo(Persona::class);
     }
 
-    public function cadete(){
-        return $this->hasOne(Cadete::class);
-    }
 }
