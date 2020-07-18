@@ -53488,7 +53488,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 params: data
             }).then(function (response) {
                 var respuesta = response.data.results;
-                console.log(respuesta);
                 me.encargadoList = respuesta.personas.data;
                 me.pagination = respuesta.pagination;
             }).catch(function (error) {
@@ -54797,11 +54796,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             persona_id: 0,
+            cadete_id: 0,
             grado: '',
             nombre: '',
             ci: '',
@@ -54916,7 +54919,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'celular': this.celular,
                 'email': this.email,
                 'year_ingreso': this.year_ingreso,
-                'id': this.persona_id
+                'id': this.cadete_id,
+                'persona_id': this.persona_id
             }).then(function (response) {
                 me.cerrarModal();
                 me.listarPersona(1, '', 'nombre');
@@ -55040,7 +55044,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.modal = 1;
                                     this.tituloModal = 'Actualizar Oficial';
                                     this.tipoAccion = 2;
-                                    this.persona_id = data['id'];
+                                    this.cadete_id = data['id'];
+                                    this.persona_id = data['persona_id'];
                                     this.grado = data['grado'];
                                     this.nombre = data['nombre'];
                                     this.ci = data['ci'];
@@ -55485,8 +55490,20 @@ var render = function() {
                             }
                           },
                           [
-                            _c("option", { attrs: { value: "Cdte" } }, [
-                              _vm._v("Cdte")
+                            _c("option", { attrs: { value: "Cdte I" } }, [
+                              _vm._v("Cdte I")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "Cdte II" } }, [
+                              _vm._v("Cdte II")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "Cdte III" } }, [
+                              _vm._v("Cdte III")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "Cdte IV" } }, [
+                              _vm._v("Cdte IV")
                             ])
                           ]
                         )
