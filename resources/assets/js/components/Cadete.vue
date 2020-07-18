@@ -113,7 +113,7 @@
                                     <div class="col-md-9">
                                         <select v-model="grado" class="form-control">
                                             <option value="Cdte">Cdte</option>
-                                        </select>                                    
+                                        </select>
                                     </div>
                                 </div>                               
                           
@@ -190,6 +190,7 @@
         data (){
             return {
                 persona_id: 0,
+                cadete_id: 0,
                 grado : '',
                 nombre : '',
                 ci : '',
@@ -305,7 +306,8 @@
                     'celular': this.celular,
                     'email': this.email,
                     'year_ingreso': this.year_ingreso,
-                    'id': this.persona_id
+                    'id': this.cadete_id,
+                    'persona_id': this.persona_id
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -442,7 +444,8 @@
                                 this.modal=1;
                                 this.tituloModal='Actualizar Oficial';
                                 this.tipoAccion=2;
-                                this.persona_id=data['id'];
+                                this.cadete_id=data['id'];
+                                this.persona_id=data['persona_id'];
                                 this.grado = data['grado'];
                                 this.nombre = data['nombre'];
                                 this.ci = data['ci'];

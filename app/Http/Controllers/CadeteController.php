@@ -18,15 +18,15 @@ class CadeteController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $personas = Cadete::join('personas','cadetes.id','=','personas.id')
-            ->select('personas.id','personas.grado','personas.nombre','personas.ci',
+            $personas = Cadete::join('personas','cadetes.persona_id','=','personas.id')
+            ->select('cadetes.id', 'cadetes.persona_id','personas.grado','personas.nombre','personas.ci',
             'personas.cm','personas.domicilio','personas.celular',
             'personas.email','cadetes.year_ingreso','personas.condicion')
             ->orderBy('personas.id', 'desc')->paginate(10);
         }
         else{
-            $personas = Cadete::join('personas','cadetes.id','=','personas.id')
-            ->select('personas.id','personas.grado','personas.nombre','personas.ci',
+            $personas = Cadete::join('personas','cadetes.persona_id','=','personas.id')
+            ->select('cadetes.id', 'cadetes.persona_id','personas.grado','personas.nombre','personas.ci',
             'personas.cm','personas.domicilio','personas.celular',
             'personas.email','cadetes.year_ingreso','personas.condicion')           
             ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
@@ -52,7 +52,7 @@ class CadeteController extends Controller
 
         try{
             DB::beginTransaction();
-            
+
             $persona = new Persona();
             $persona->grado = $request->grado;
             $persona->nombre = $request->nombre;
@@ -67,7 +67,7 @@ class CadeteController extends Controller
             $cadete = new Cadete();
             $cadete->year_ingreso = $request->year_ingreso;
             //$cadete->condicion = '1';
-            $cadete->id = $persona->id;
+            $cadete->persona_id = $persona->id;
             $cadete->save();
 
             DB::commit();
@@ -89,7 +89,7 @@ class CadeteController extends Controller
             //Buscar primero el cadete a modificar
             $cadete = Cadete::findOrFail($request->id);
 
-            $persona = Persona::findOrFail($cadete->id);
+            $persona = Persona::findOrFail($cadete->persona_id);
             $persona->grado = $request->grado;
             $persona->nombre = $request->nombre;
             $persona->ci = $request->ci;
@@ -121,7 +121,7 @@ class CadeteController extends Controller
             //Buscar primero el cadete a modificar
             $cadete = Cadete::findOrFail($request->id);
 
-            $persona = Persona::findOrFail($cadete->id);
+            $persona = Persona::findOrFail($cadete->persona_id);
             $persona->condicion = '0';
             $persona->save();
 
@@ -146,7 +146,7 @@ class CadeteController extends Controller
             //Buscar primero el cadete a modificar
             $cadete = Cadete::findOrFail($request->id);
 
-            $persona = Persona::findOrFail($cadete->id);
+            $persona = Persona::findOrFail($cadete->persona_id);
             $persona->condicion = '1';
             $persona->save();
 
