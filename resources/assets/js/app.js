@@ -17,6 +17,7 @@ window.Vue = require('vue');
 
 Vue.component('categoria', require('./components/Categoria.vue'));
 Vue.component('premio', require('./components/Premio.vue'));
+Vue.component('disciplina', require('./components/Disciplina.vue'));
 Vue.component('sancion', require('./components/Sancion.vue'));
 Vue.component('oficial', require('./components/Oficial.vue'));
 Vue.component('cadete', require('./components/Cadete.vue'));

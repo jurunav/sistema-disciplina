@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Merito;
 use Illuminate\Database\Eloquent\Model;
 
 class Cadete extends Model
@@ -13,5 +14,14 @@ class Cadete extends Model
     public function persona()
     {
         return $this->belongsTo('App\Persona');
+    }
+
+    public function meritos() {
+        return $this->belongsToMany(
+            Merito::class,
+            'cadetes_meritos',
+            'cadete_id',
+            'merito_id'
+        );
     }
 }

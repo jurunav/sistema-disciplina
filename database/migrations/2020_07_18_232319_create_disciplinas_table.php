@@ -16,10 +16,13 @@ class CreateDisciplinasTable extends Migration
         Schema::create('disciplinas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
+            $table->unsignedInteger('premio_id')->index();
             $table->unsignedInteger('categoria_id')->nullable();
             $table->integer('puntaje');
             $table->timestamps();
 
+
+            $table->foreign('premio_id')->references('id')->on('premios')->onDelete('cascade');
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('set null');
 
         });

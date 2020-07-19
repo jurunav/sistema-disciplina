@@ -10,16 +10,16 @@
             <premio></premio>
         </template>
         <template v-if="menu==3" >
-            <sancion></sancion>
+            <disciplina></disciplina>
         </template>
         <template v-if="menu==4" >
-            <oficial></oficial>
+            <sancion></sancion>
         </template>
         <template v-if="menu==5" >
-            <cadete></cadete>
+            <oficial></oficial>
         </template>
         <template v-if="menu==6" >
-            <h1>Contenido del menu 6</h1>
+            <cadete></cadete>
         </template>
         <template v-if="menu==7" >
             <h1>Contenido del menu 7</h1>
@@ -28,10 +28,10 @@
             <h1>Contenido del menu 8</h1>
         </template>
         <template v-if="menu==9" >
-            <rol></rol>
+            <h1>Contenido del menu 9</h1>
         </template>
         <template v-if="menu==10" >
-            <h1>Contenido del menu 10</h1>
+            <rol></rol>
         </template>
         <template v-if="menu==11" >
             <h1>Contenido del menu 11</h1>
@@ -41,6 +41,9 @@
         </template>
         <template v-if="menu==13" >
             <h1>Contenido del menu 13</h1>
+        </template>
+        <template v-if="menu==14" >
+            <h1>Contenido del menu 14</h1>
         </template>
 
 
