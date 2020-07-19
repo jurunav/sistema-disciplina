@@ -12,4 +12,10 @@ class Persona extends Model
     {
         return $this->hasOne('App\Cadete');
     }
+
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
+
 }

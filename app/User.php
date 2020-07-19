@@ -27,7 +27,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'idpersona','idrol', 'usuario', 'password','condicion'
     ];
 
     protected $dateFormat = 'Y-m-d H:i:s';
@@ -40,6 +40,14 @@ class User extends BaseModel implements
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function rol(){
+        return $this->belongsTo('App\Rol');
+    }
+
+    public function persona(){
+        return $this->belongsTo('App\Persona');
+    }
 
     public function toArray($mode = 'min')
     {
