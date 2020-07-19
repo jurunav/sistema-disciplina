@@ -50899,22 +50899,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             premio_id: 0,
             nombre: '',
-            puntaje: 0,
             arrayPremio: [],
             modal: 0,
             tituloModal: '',
@@ -50991,8 +50981,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var me = this;
 
             axios.post('/premio/registrar', {
-                'nombre': this.nombre,
-                'puntaje': this.puntaje
+                'nombre': this.nombre
             }).then(function (response) {
                 me.cerrarModal();
                 me.listarPremio(1, '', 'nombre');
@@ -51009,7 +50998,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.put('/premio/actualizar', {
                 'nombre': this.nombre,
-                'puntaje': this.puntaje,
                 'id': this.premio_id
             }).then(function (response) {
                 me.cerrarModal();
@@ -51087,7 +51075,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.errorMostrarMsjPremio = [];
 
             if (!this.nombre) this.errorMostrarMsjPremio.push("El nombre del premio no puede estar vacío.");
-            if (!this.puntaje) this.errorMostrarMsjPremio.push("El puntaje del premio debe ser un número y no puede estar vacío.");
 
             if (this.errorMostrarMsjPremio.length) this.errorPremio = 1;
 
@@ -51097,7 +51084,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.modal = 0;
             this.tituloModal = '';
             this.nombre = '';
-            this.puntaje = 0;
             this.errorPremio = 0;
         },
         abrirModal: function abrirModal(modelo, accion) {
@@ -51112,7 +51098,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.modal = 1;
                                     this.tituloModal = 'Registrar Premio';
                                     this.nombre = '';
-                                    this.puntaje = 0;
                                     this.tipoAccion = 1;
                                     break;
                                 }
@@ -51124,7 +51109,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.tipoAccion = 2;
                                     this.premio_id = data['id'];
                                     this.nombre = data['nombre'];
-                                    this.puntaje = data['puntaje'];
                                     break;
                                 }
                         }
@@ -51206,10 +51190,6 @@ var render = function() {
                   [
                     _c("option", { attrs: { value: "nombre" } }, [
                       _vm._v("Nombre")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "puntaje" } }, [
-                      _vm._v("Puntaje")
                     ])
                   ]
                 ),
@@ -51330,10 +51310,6 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", {
                       domProps: { textContent: _vm._s(premio.nombre) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(premio.puntaje) }
                     }),
                     _vm._v(" "),
                     _c("td", [
@@ -51539,41 +51515,6 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "col-md-3 form-control-label",
-                          attrs: { for: "text-input" }
-                        },
-                        [_vm._v("Puntaje")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-9" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.puntaje,
-                              expression: "puntaje"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { type: "number", placeholder: "" },
-                          domProps: { value: _vm.puntaje },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.puntaje = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
                     _c(
                       "div",
                       {
@@ -51679,8 +51620,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Opciones")]),
         _vm._v(" "),
         _c("th", [_vm._v("Nombre")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Puntaje")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])

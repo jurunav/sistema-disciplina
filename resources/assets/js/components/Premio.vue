@@ -19,7 +19,6 @@
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
                                       <option value="nombre">Nombre</option>
-                                      <option value="puntaje">Puntaje</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarPremio(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" @click="listarPremio(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -31,7 +30,6 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>Puntaje</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -53,7 +51,6 @@
                                         </template>
                                     </td>
                                     <td v-text="premio.nombre"></td>
-                                    <td v-text="premio.puntaje"></td>
                                     <td>
                                         <div v-if="premio.condicion">
                                             <span class="badge badge-success">Activo</span>
@@ -102,12 +99,6 @@
                                         <input type="text" v-model="nombre" class="form-control" placeholder="Nombre del premio">                                        
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Puntaje</label>
-                                    <div class="col-md-9">
-                                        <input type="number" v-model="puntaje" class="form-control" placeholder="">                                        
-                                    </div>
-                                </div>
 
                                 <div v-show="errorPremio" class="form-group row div-error">
                                     <div class="text-center text-error">
@@ -139,7 +130,6 @@
             return {
                 premio_id: 0,
                 nombre : '',
-                puntaje : 0,
                 arrayPremio : [],
                 modal : 0,
                 tituloModal : '',
@@ -218,7 +208,6 @@
 
                 axios.post('/premio/registrar',{
                     'nombre': this.nombre,
-                    'puntaje': this.puntaje,
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPremio(1,'','nombre');
@@ -235,7 +224,6 @@
 
                 axios.put('/premio/actualizar',{
                     'nombre': this.nombre,
-                    'puntaje': this.puntaje,
                     'id': this.premio_id
                 }).then(function (response) {
                     me.cerrarModal();
@@ -327,8 +315,7 @@
                 this.errorMostrarMsjPremio =[];
 
                 if (!this.nombre) this.errorMostrarMsjPremio.push("El nombre del premio no puede estar vacío.");
-                if (!this.puntaje) this.errorMostrarMsjPremio.push("El puntaje del premio debe ser un número y no puede estar vacío.");
-               
+
                 if (this.errorMostrarMsjPremio.length) this.errorPremio = 1;
 
                 return this.errorPremio;
@@ -337,7 +324,6 @@
                 this.modal=0;
                 this.tituloModal='';
                 this.nombre = '';
-                this.puntaje = 0;
 		        this.errorPremio=0;
             },
             abrirModal(modelo, accion, data = []){
@@ -350,7 +336,6 @@
                                 this.modal = 1;
                                 this.tituloModal = 'Registrar Premio';
                                 this.nombre= '';
-                                this.puntaje=0;
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -362,7 +347,6 @@
                                 this.tipoAccion=2;
                                 this.premio_id=data['id'];
                                 this.nombre = data['nombre'];
-                                this.puntaje=data['puntaje'];
                                 break;
                             }
                         }
