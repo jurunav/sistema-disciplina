@@ -25,9 +25,10 @@ class CreatePermissionTables extends Migration
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('guard_name');
-            $table->timestamps();
+            $table->string('nombre', 100)->unique();
+            $table->string('descripcion', 100)->nullable();
+            $table->boolean('condicion')->default(1); 
+            $table->timestamps();    
         });
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {

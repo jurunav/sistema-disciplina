@@ -34,6 +34,22 @@ class OficialController extends Controller
             'personas' => $personas
         ];
     }
+
+    public function selectOficial(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        
+        $oficiales = [];
+        $filtro = $request->filtro;
+        if (!empty($filtro)) {
+            $oficiales = Persona::where('nombre', 'like', '%'. $filtro . '%')
+            ->select('id','nombre','grado')
+            ->orderBy('nombre', 'asc')->get();
+        }
+        return ['oficiales' => $oficiales];
+    }
+
+    
+
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');

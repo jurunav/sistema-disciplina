@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
+
+Route::get('/main', function () {
     return view('contenido/contenido');
-});
+})->name('main');
 
 Route::get('/categoria', 'CategoriaController@index');
 Route::post('/categoria/registrar', 'CategoriaController@store');
@@ -39,11 +40,31 @@ Route::post('/oficial/registrar', 'OficialController@store');
 Route::put('/oficial/actualizar', 'OficialController@update');
 Route::put('/oficial/desactivar', 'OficialController@desactivar');
 Route::put('/oficial/activar', 'OficialController@activar');
+Route::get('/oficial/selectOficial', 'OficialController@selectOficial');
 
 Route::get('/cadete', 'CadeteController@index');
 Route::post('/cadete/registrar', 'CadeteController@store');
 Route::put('/cadete/actualizar', 'CadeteController@update');
 Route::put('/cadete/desactivar', 'CadeteController@desactivar');
 Route::put('/cadete/activar', 'CadeteController@activar');
+
+//Route::get('/rol', 'RolController@index');
+//Route::post('/rol/registrar', 'RolController@store');
+//Route::put('/rol/actualizar', 'RolController@update');
+//Route::put('/rol/desactivar', 'RolController@desactivar');
+//Route::put('/rol/activar', 'RolController@activar');
+//Route::get('/rol/selectRol', 'RolController@selectRol');
+
+Route::get('/user', 'UserController@index');
+Route::post('/user/registrar', 'UserController@store');
+Route::put('/user/actualizar', 'UserController@update');
+Route::put('/user/desactivar', 'UserController@desactivar');
+Route::put('/user/activar', 'UserController@activar');
+
+
+Route::get('/','Auth\LoginController@showLoginForm');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/rol', 'RolController');

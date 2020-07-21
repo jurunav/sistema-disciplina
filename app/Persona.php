@@ -49,4 +49,10 @@ class Persona extends BaseModel
         $array['encargado_id'] = $this->encargado->id;
         return $array;
     }
+
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
+
 }
