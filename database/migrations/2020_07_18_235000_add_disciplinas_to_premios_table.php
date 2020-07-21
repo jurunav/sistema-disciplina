@@ -28,7 +28,7 @@ class AddDisciplinasToPremiosTable extends Migration
     public function down()
     {
         Schema::table('premios', function (Blueprint $table) {
-            $table->unsignedInteger('idcategoria');
+            $table->unsignedInteger('idcategoria')->nullable();
             $table->foreign('idcategoria')->references('id')->on('categorias');
             $table->index('idcategoria','premios_idcategoria_foreign');
         });

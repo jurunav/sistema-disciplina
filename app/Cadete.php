@@ -2,14 +2,27 @@
 
 namespace App;
 
+use App\Models\BaseModel;
 use App\Models\Merito;
-use Illuminate\Database\Eloquent\Model;
 
-class Cadete extends Model
+class Cadete extends BaseModel
 {
-    protected $fillable = ['id', 'year_ingreso'];
 
-    public $timestamps = false;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'cadetes';
+
+    /**
+     * Cadete constructor.
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
 
     public function persona()
     {
@@ -23,5 +36,13 @@ class Cadete extends Model
             'cadete_id',
             'merito_id'
         );
+    }
+
+    public function toArray()
+    {
+        $array = parent::attributesToArray();
+        $array['nombre'] = $this->persona->nombre;
+        $array['persona'] = $this->persona;
+        return $array;
     }
 }

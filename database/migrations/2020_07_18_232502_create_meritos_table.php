@@ -16,12 +16,12 @@ class CreateMeritosTable extends Migration
         Schema::create('meritos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('num_orden')->nullable();
-            $table->unsignedInteger('premio_id');
+            $table->unsignedInteger('disciplina_id');
             $table->string('descripcion')->nullable();
             $table->unsignedInteger('encargado_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('premio_id')->references('id')->on('premios')->onDelete('cascade');
+            $table->foreign('disciplina_id')->references('id')->on('disciplinas')->onDelete('cascade');
             $table->foreign('encargado_id')->references('id')->on('encargados')->onDelete('set null');
 
         });

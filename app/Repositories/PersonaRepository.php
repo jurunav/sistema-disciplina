@@ -12,6 +12,10 @@ class PersonaRepository
         return User::all();
     }
 
+    public function getByUser(User $user) {
+        return Persona::where('user_id', '=' , $user->id)->first();
+    }
+
     public function getById($id) {
         return Persona::find($id);
     }

@@ -22,7 +22,7 @@
             <cadete></cadete>
         </template>
         <template v-if="menu==7" >
-            <h1>Contenido del menu 7</h1>
+            <merito></merito>
         </template>
         <template v-if="menu==8" >
             <h1>Contenido del menu 8</h1>

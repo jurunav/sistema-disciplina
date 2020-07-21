@@ -23,3 +23,5 @@ Route::resource('encargados', 'Api\EncargadoController');
 Route::resource('categorias', 'Api\CategoriaController');
 Route::resource('premios', 'Api\PremioController');
 Route::resource('disciplinas', 'Api\DisciplinaController');
+Route::resource('meritos', 'Api\MeritoController');
+Route::get('cadetes/search', 'Api\CadeteController@getAllByFilter');
