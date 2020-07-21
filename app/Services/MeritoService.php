@@ -75,9 +75,8 @@ class MeritoService extends BaseService
             $merito->descripcion = $data['descripcion'];
             $merito->disciplina()->associate($disciplina);
             $merito->encargado()->associate($encargado);
-            $merito->cadetes()->sync([$cadete->id]);
-
             $merito->save();
+            $merito->cadetes()->sync([$cadete->id]);
         }
         return $merito;
     }
@@ -109,8 +108,8 @@ class MeritoService extends BaseService
             $merito->descripcion = $data['descripcion'];
             $merito->disciplina()->associate($disciplina);
             $merito->encargado()->associate($encargado);
-            $merito->cadetes()->sync([$cadete->id]);
             $merito->save();
+            $merito->cadetes()->sync([$cadete->id]);
         }
         return $merito;
     }

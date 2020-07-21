@@ -11,6 +11,7 @@ use App\Services\CadeteService;
 use App\Services\EncargadoService;
 use App\Services\MeritoService;
 use App\Services\DisciplinaService;
+use App\User;
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
 

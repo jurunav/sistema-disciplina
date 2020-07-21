@@ -35,11 +35,11 @@ class PersonaService extends BaseService
     }
 
     public function getByUser(User $user) {
-        $this->personaRepository->getByUser($user);
+        return $this->personaRepository->getByUser($user);
     }
 
     public function getById($id) {
-        $this->personaRepository->getById($id);
+        return $this->personaRepository->getById($id);
     }
 
     public function getAll() {

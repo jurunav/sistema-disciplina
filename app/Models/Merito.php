@@ -45,6 +45,7 @@ class Merito extends BaseModel
         $array = parent::attributesToArray();
         $array['disciplina'] = $this->disciplina;
         $array['encargado'] = $this->encargado;
+        $array['cadetes'] = $this->cadetes;
         return $array;
     }
 }
