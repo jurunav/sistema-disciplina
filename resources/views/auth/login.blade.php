@@ -22,14 +22,14 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                        <button type="button" class="btn btn-primary px-4">Acceder</button>
+                        <button type="submit" class="btn btn-primary px-4">Acceder</button>
                         </div>
                         <div class="col-6 text-right">
                         <button type="button" class="btn btn-link px-0">Olvidaste tu password?</button>
                         </div>
                     </div>
                     </div>
-               </form> 
+               </form>
             </div>
           <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
             <div class="card-body text-center">
