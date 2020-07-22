@@ -55,29 +55,12 @@ class MeritoService extends BaseService
      *
      */
     public function create(Disciplina $disciplina, Cadete $cadete, $data, Encargado $encargado) {
-        $validatorRules = [
-            'num_orden' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255',
-        ];
-
-        /**
-         * @var \Illuminate\Validation\Validator $validator
-         */
-        $validator = Validator::make($data, $validatorRules);
-        if($validator->fails()) {
-            $this->errors->merge($validator->errors());
-        }
-
-        $merito = null;
-        if (!$this->hasErrors()) {
-            $merito = new Merito();
-            $merito->num_orden = $data['num_orden'];
-            $merito->descripcion = $data['descripcion'];
-            $merito->disciplina()->associate($disciplina);
-            $merito->encargado()->associate($encargado);
-            $merito->save();
-            $merito->cadetes()->sync([$cadete->id]);
-        }
+        $merito = new Merito();
+        $merito->num_orden = $data['num_orden'];
+        $merito->disciplina()->associate($disciplina);
+        $merito->encargado()->associate($encargado);
+        $merito->cadete()->associate($cadete);
+        $merito->save();
         return $merito;
     }
 
@@ -90,27 +73,11 @@ class MeritoService extends BaseService
      * @return Merito
      */
     public function update(Merito $merito, Disciplina $disciplina, Cadete $cadete, $data, Encargado $encargado) {
-        $validatorRules = [
-            'num_orden' => 'filled|string|max:255',
-            'descripcion' => 'filled|numeric',
-        ];
-
-        /**
-         * @var \Illuminate\Validation\Validator $validator
-         */
-        $validator = Validator::make($data, $validatorRules);
-        if($validator->fails()) {
-            $this->errors->merge($validator->errors());
-        }
-
-        if (!$this->hasErrors()) {
-            $merito->num_orden = $data['num_orden'];
-            $merito->descripcion = $data['descripcion'];
-            $merito->disciplina()->associate($disciplina);
-            $merito->encargado()->associate($encargado);
-            $merito->save();
-            $merito->cadetes()->sync([$cadete->id]);
-        }
+        $merito->num_orden = $data['num_orden'];
+        $merito->disciplina()->associate($disciplina);
+        $merito->encargado()->associate($encargado);
+        $merito->cadete()->associate($cadete);
+        $merito->save();
         return $merito;
     }
 

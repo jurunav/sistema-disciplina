@@ -61,12 +61,12 @@ class MeritoController extends Controller
         $apiRes->results['meritos'] = $meritoList;
 
         $apiRes->results['pagination'] = [
-            'total'        => $meritoList->total(),
+            'total' => $meritoList->total(),
             'current_page' => $meritoList->currentPage(),
-            'per_page'     => $meritoList->perPage(),
-            'last_page'    => $meritoList->lastPage(),
-            'from'         => $meritoList->firstItem(),
-            'to'           => $meritoList->lastItem(),
+            'per_page' => $meritoList->perPage(),
+            'last_page' => $meritoList->lastPage(),
+            'from' => $meritoList->firstItem(),
+            'to' => $meritoList->lastItem(),
         ];
 
         return response()->json($apiRes);

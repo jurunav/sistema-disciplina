@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Cadete;
-use App\Premio;
 
 class Merito extends BaseModel
 {
@@ -31,13 +30,8 @@ class Merito extends BaseModel
         return $this->belongsTo(Encargado::class);
     }
 
-    public function cadetes() {
-        return $this->belongsToMany(
-            Cadete::class,
-            'cadetes_meritos',
-            'merito_id',
-            'cadete_id'
-        );
+    public function cadete() {
+        return $this->belongsTo(Cadete::class);
     }
 
     public function toArray()
@@ -45,7 +39,7 @@ class Merito extends BaseModel
         $array = parent::attributesToArray();
         $array['disciplina'] = $this->disciplina;
         $array['encargado'] = $this->encargado;
-        $array['cadetes'] = $this->cadetes;
+        $array['cadete'] = $this->cadete;
         return $array;
     }
 }

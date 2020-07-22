@@ -17,11 +17,12 @@ class CreateMeritosTable extends Migration
             $table->increments('id');
             $table->string('num_orden')->nullable();
             $table->unsignedInteger('disciplina_id');
-            $table->string('descripcion')->nullable();
+            $table->unsignedInteger('cadete_id');
             $table->unsignedInteger('encargado_id')->nullable();
             $table->timestamps();
 
             $table->foreign('disciplina_id')->references('id')->on('disciplinas')->onDelete('cascade');
+            $table->foreign('cadete_id')->references('id')->on('cadetes')->onDelete('cascade');
             $table->foreign('encargado_id')->references('id')->on('encargados')->onDelete('set null');
 
         });

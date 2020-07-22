@@ -30,12 +30,7 @@ class Cadete extends BaseModel
     }
 
     public function meritos() {
-        return $this->belongsToMany(
-            Merito::class,
-            'cadetes_meritos',
-            'cadete_id',
-            'merito_id'
-        );
+        return $this->hasMany(Merito::class, 'cadete_id', 'id');
     }
 
     public function toArray()

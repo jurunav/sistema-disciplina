@@ -57156,8 +57156,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -57169,7 +57167,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             cadete: {},
             disciplina: {},
             num_orden: '',
-            descripcion: '',
             arrayMerito: [],
             modal: 0,
             tituloModal: '',
@@ -57185,7 +57182,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'to': 0
             },
             offset: 3,
-            criterio: 'nombre',
+            criterio: '',
             buscar: '',
             arrayCadete: [],
             arrayDisciplina: []
@@ -57276,21 +57273,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var respuesta = response.data.results;
                 q: search;
                 me.arrayCadete = respuesta;
-                loading(false);
             }).catch(function (error) {
                 console.log(error);
             });
         },
         getDatosCadete: function getDatosCadete(val1) {
-            console.log(val1);
             var me = this;
-            me.loading = true;
-            me.cadete.id = val1.id;
+            me.cadete = val1;
         },
         getDatosDisciplina: function getDatosDisciplina(val1) {
             var me = this;
-            me.loading = true;
-            me.disciplina.id = val1.id;
+            me.disciplina = val1;
         },
         cambiarPagina: function cambiarPagina(page, buscar, criterio) {
             var me = this;
@@ -57312,8 +57305,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 params: {
                     'disciplinaId': this.disciplina.id,
                     'cadeteId': this.cadete.id,
-                    'num_orden': this.num_orden,
-                    'descripcion': this.descripcion
+                    'num_orden': this.num_orden
                 }
             }).then(function (response) {
                 me.cerrarModal();
@@ -57336,7 +57328,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     'disciplinaId': this.disciplina.id,
                     'cadeteId': this.cadete.id,
                     'num_orden': this.num_orden,
-                    'descripcion': this.descripcion,
                     'id': this.merito_id
                 }
             }).then(function (response) {
@@ -57383,9 +57374,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.errorMerito = 0;
             this.errorMostrarMsjMerito = [];
 
-            if (this.disciplina === null) this.errorMostrarMsjMerito.push("Seleccione un disciplina.");
-            if (!this.num_orden) this.errorMostrarMsjMerito.push("El numero de orden no puede estar vacío.");
-            if (!this.descripcion) this.errorMostrarMsjMerito.push("La descripcion de merito no puede estar vacío.");
+            if (typeof this.disciplina.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione una disciplina.");
+            if (typeof this.cadete.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione un cadete.");
 
             if (this.errorMostrarMsjMerito.length) this.errorMerito = 1;
 
@@ -57397,12 +57387,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.cadete = {};
             this.disciplina = {};
             this.num_orden = '';
-            this.descripcion = '';
             this.errorMerito = 0;
         },
         abrirModal: function abrirModal(modelo, accion) {
             var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
+            console.log(data);
             switch (modelo) {
                 case "merito":
                     {
@@ -57412,7 +57402,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.modal = 1;
                                     this.tituloModal = 'Registrar Merito';
                                     this.num_orden = '';
-                                    this.descripcion = '';
                                     this.tipoAccion = 1;
                                     break;
                                 }
@@ -57424,9 +57413,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.tipoAccion = 2;
                                     this.merito_id = data['id'];
                                     this.disciplina = data['disciplina'];
-                                    this.cadete = data['cadate'];
+                                    this.cadete = data['cadete'];
                                     this.num_orden = data['num_orden'];
-                                    this.descripcion = data['descripcion'];
                                     break;
                                 }
                         }
@@ -58122,12 +58110,14 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [_vm._v(" " + _vm._s(merito.num_orden))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(" " + _vm._s(merito.disciplina.nombre))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(" " + _vm._s(merito.descripcion))]),
-                    _vm._v(" "),
                     _c("td", [
                       _vm._v(" " + _vm._s(merito.cadete.persona.nombre))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(" " + _vm._s(merito.disciplina.nombre))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(" " + _vm._s(merito.encargado.persona.nombre))
                     ]),
                     _vm._v(" "),
                     _c("td", [_vm._v(" " + _vm._s(merito.created_at))])
@@ -58301,7 +58291,8 @@ var render = function() {
                             attrs: {
                               label: "nombre",
                               options: _vm.arrayCadete,
-                              placeholder: "Buscar Cadete..."
+                              placeholder: "Buscar Cadete...",
+                              value: _vm.cadete
                             },
                             on: {
                               search: _vm.selectCadete,
@@ -58331,7 +58322,8 @@ var render = function() {
                             attrs: {
                               label: "nombre",
                               options: _vm.arrayDisciplina,
-                              placeholder: "Buscar Disciplina..."
+                              placeholder: "Buscar Disciplina...",
+                              value: _vm.disciplina
                             },
                             on: {
                               search: _vm.selectDisciplina,
@@ -58375,41 +58367,6 @@ var render = function() {
                                 return
                               }
                               _vm.num_orden = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "col-md-3 form-control-label",
-                          attrs: { for: "text-input" }
-                        },
-                        [_vm._v("Descripcion")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-9" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.descripcion,
-                              expression: "descripcion"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { type: "text", placeholder: "" },
-                          domProps: { value: _vm.descripcion },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.descripcion = $event.target.value
                             }
                           }
                         })
@@ -58522,11 +58479,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Num Orden")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Cadete")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Disciplina")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Descripcion")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Cadete")]),
+        _c("th", [_vm._v("Oficial/Encargado")]),
         _vm._v(" "),
         _c("th", [_vm._v("Creado")])
       ])

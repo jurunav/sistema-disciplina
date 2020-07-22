@@ -30,9 +30,9 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Num Orden</th>
-                                    <th>Disciplina</th>
-                                    <th>Descripcion</th>
                                     <th>Cadete</th>
+                                    <th>Disciplina</th>
+                                    <th>Oficial/Encargado</th>
                                     <th>Creado</th>
                                 </tr>
                             </thead>
@@ -49,9 +49,9 @@
                                         </template>
                                     </td>
                                     <td> {{ merito.num_orden }}</td>
-                                    <td> {{ merito.disciplina.nombre }}</td>
-                                    <td> {{ merito.descripcion }}</td>
                                     <td> {{ merito.cadete.persona.nombre }}</td>
+                                    <td> {{ merito.disciplina.nombre }}</td>
+                                    <td> {{ merito.encargado.persona.nombre }}</td>
                                     <td> {{ merito.created_at }}</td>
                                 </tr>
                             </tbody>
@@ -93,7 +93,9 @@
                                                 label="nombre"
                                                 :options="arrayCadete"
                                                 placeholder="Buscar Cadete..."
-                                                @input="getDatosCadete">
+                                                @input="getDatosCadete"
+                                                :value="cadete"
+                                        >
                                         </v-select>
                                     </div>
                                 </div>
@@ -105,7 +107,9 @@
                                                 label="nombre"
                                                 :options="arrayDisciplina"
                                                 placeholder="Buscar Disciplina..."
-                                                @input="getDatosDisciplina">
+                                                @input="getDatosDisciplina"
+                                                :value="disciplina"
+                                        >
                                         </v-select>
                                     </div>
                                 </div>
@@ -114,12 +118,6 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Num Orden</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="num_orden" class="form-control" placeholder="Numero de Orden">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Descripcion</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="descripcion" class="form-control" placeholder="">
                                     </div>
                                 </div>
 
@@ -158,7 +156,6 @@
                 cadete : {},
                 disciplina :  {},
                 num_orden : '',
-                descripcion : '',
                 arrayMerito : [],
                 modal : 0,
                 tituloModal : '',
@@ -174,7 +171,7 @@
                     'to' : 0,
                 },
                 offset : 3,
-                criterio : 'nombre',
+                criterio : '',
                 buscar : '',
                 arrayCadete :[],
                 arrayDisciplina :[]
@@ -266,21 +263,17 @@
                     let respuesta = response.data.results;
                     q: search;
                     me.arrayCadete = respuesta;
-                    loading(false);
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
             getDatosCadete(val1){
-                console.log(val1);
                 let me = this;
-                me.loading = true;
-                me.cadete.id = val1.id;
+                me.cadete = val1;
             },
             getDatosDisciplina(val1){
                 let me = this;
-                me.loading = true;
-                me.disciplina.id = val1.id;
+                me.disciplina = val1;
             },
             cambiarPagina(page,buscar,criterio){
                 let me = this;
@@ -303,7 +296,6 @@
                         'disciplinaId': this.disciplina.id,
                         'cadeteId': this.cadete.id,
                         'num_orden': this.num_orden,
-                        'descripcion': this.descripcion,
                     }
                 }).then(function (response) {
                     me.cerrarModal();
@@ -326,7 +318,6 @@
                         'disciplinaId': this.disciplina.id,
                         'cadeteId': this.cadete.id,
                         'num_orden': this.num_orden,
-                        'descripcion': this.descripcion,
                         'id': this.merito_id
                     }
                 }).then(function (response) {
@@ -380,10 +371,9 @@
                 this.errorMerito=0;
                 this.errorMostrarMsjMerito =[];
 
-                if (this.disciplina === null) this.errorMostrarMsjMerito.push("Seleccione un disciplina.");
-                if (!this.num_orden) this.errorMostrarMsjMerito.push("El numero de orden no puede estar vacío.");
-                if (!this.descripcion) this.errorMostrarMsjMerito.push("La descripcion de merito no puede estar vacío.");
-               
+                if (typeof this.disciplina.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione una disciplina.");
+                if (typeof this.cadete.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione un cadete.");
+
                 if (this.errorMostrarMsjMerito.length) this.errorMerito = 1;
 
                 return this.errorMerito;
@@ -394,7 +384,6 @@
                 this.cadete= {};
                 this.disciplina= {};
                 this.num_orden = '';
-                this.descripcion = '';
 		        this.errorMerito=0;
             },
             abrirModal(modelo, accion, data = []){
@@ -407,7 +396,6 @@
                                 this.modal = 1;
                                 this.tituloModal = 'Registrar Merito';
                                 this.num_orden= '';
-                                this.descripcion='';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -419,9 +407,8 @@
                                 this.tipoAccion=2;
                                 this.merito_id=data['id'];
                                 this.disciplina=data['disciplina'];
-                                this.cadete=data['cadate'];
+                                this.cadete=data['cadete'];
                                 this.num_orden = data['num_orden'];
-                                this.descripcion=data['descripcion'];
                                 break;
                             }
                         }
