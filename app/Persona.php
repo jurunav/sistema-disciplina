@@ -51,10 +51,4 @@ class Persona extends BaseModel
 
         return $array;
     }
-
-    public function user()
-    {
-        return $this->hasOne('App\User');
-    }
-
 }
