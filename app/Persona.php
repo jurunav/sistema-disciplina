@@ -46,13 +46,9 @@ class Persona extends BaseModel
     public function toArray()
     {
         $array = parent::attributesToArray();
-        $array['encargado_id'] = $this->encargado->id;
+        if (!is_null($this->encargado))
+            $array['encargado_id'] = $this->encargado->id;
+
         return $array;
     }
-
-    public function user()
-    {
-        return $this->hasOne('App\User');
-    }
-
 }

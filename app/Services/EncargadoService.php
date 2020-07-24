@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Models\Encargado;
 use App\Repositories\EncargadoRepository;
+use App\User;
 
 class EncargadoService extends BaseService
 {
@@ -29,6 +30,11 @@ class EncargadoService extends BaseService
         parent::__construct();
         $this->encargadoRepository = $encargadoRepository;
         $this->personaService = $personaService;
+    }
+
+    public function getByUser(User $user) {
+        $persona = $this->personaService->getByUser($user);
+        return $this->encargadoRepository->getByPersonaId($persona->id);
     }
 
     public function getById($id) {
