@@ -2,14 +2,18 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
+use App\Models\Disciplina;
+use App\Models\Merito;
 
-class Premio extends Model
+class Premio extends BaseModel
 {
 
-    protected $fillable =['idcategoria','nombre','puntaje','condicion'];
-    
-    public function categoria(){
-        return $this->belongsTo('App\Categoria');
+    public function disciplinas(){
+        return $this->hasMany(Disciplina::class);
+    }
+
+    public function meritos(){
+        return $this->hasMany(Merito::class);
     }
 }

@@ -2,17 +2,13 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
+use App\Models\Disciplina;
 
-class Categoria extends Model
+class Categoria extends BaseModel
 {
-    //protected $table = 'categorias';
-    //protected $primaryKey = 'id';
-    protected $fillable = ['nombre','descripcion','condicion'];
-
-    public function premios()
-    {
-        return $this->hasMany('App\Premio');
+    public function disciplinas(){
+        return $this->hasMany(Disciplina::class);
     }
 
 }

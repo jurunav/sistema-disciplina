@@ -20,3 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('user/password', 'Api\UserController@changePassword');
 Route::resource('users', 'Api\UserController');
 Route::resource('encargados', 'Api\EncargadoController');
+Route::resource('categorias', 'Api\CategoriaController');
+Route::resource('premios', 'Api\PremioController');
+Route::resource('disciplinas', 'Api\DisciplinaController');
+Route::resource('meritos', 'Api\MeritoController');
+Route::get('cadetes/search', 'Api\CadeteController@getAllByFilter');

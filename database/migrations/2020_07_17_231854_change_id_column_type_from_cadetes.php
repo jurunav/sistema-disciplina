@@ -15,7 +15,7 @@ class ChangeIdColumnTypeFromCadetes extends Migration
     {
         Schema::table('cadetes', function (Blueprint $table) {
             $table->dropForeign(['id']);
-            $table->dropIndex(['id']);
+            $table->dropIndex('cadetes_id_foreign');
             \Illuminate\Support\Facades\DB::statement("
                     ALTER TABLE cadetes MODIFY id INT UNSIGNED");
         });
@@ -32,7 +32,7 @@ class ChangeIdColumnTypeFromCadetes extends Migration
             \Illuminate\Support\Facades\DB::statement("
                     ALTER TABLE cadetes MODIFY COLUMN id int(10) unsigned not null");
             $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');
-            $table->index('id');
+            $table->index('id', 'cadetes_id_foreign');
         });
     }
 }

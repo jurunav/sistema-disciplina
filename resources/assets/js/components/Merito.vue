@@ -8,8 +8,8 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Premios
-                        <button type="button" @click="abrirModal('premio','registrar')" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Meritos
+                        <button type="button" @click="abrirModal('merito','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -18,10 +18,10 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="nombre">Nombre</option>
+                                      <option value="num_orden">Numero de Orden</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarPremio(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarPremio(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarMerito(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarMerito(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -29,38 +29,31 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
-                                    <th>Nombre</th>
-                                    <th>Estado</th>
+                                    <th>Num Orden</th>
+                                    <th>Cadete</th>
+                                    <th>Disciplina</th>
+                                    <th>Oficial/Encargado</th>
+                                    <th>Creado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="premio in arrayPremio" :key="premio.id">
+                                <tr v-for="merito in arrayMerito" :key="merito.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('premio','actualizar',premio)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('merito','actualizar',merito)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="premio.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarPremio(premio.id)">
+                                        <template v-if="merito.id">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="eliminarMerito(merito.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarPremio(premio.id)">
-                                                <i class="icon-check"></i>
-                                            </button>
-                                        </template>
                                     </td>
-                                    <td v-text="premio.nombre"></td>
-                                    <td>
-                                        <div v-if="premio.condicion">
-                                            <span class="badge badge-success">Activo</span>
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">Desactivado</span>
-                                        </div>
-                                        
-                                    </td>
-                                </tr>                                
+                                    <td> {{ merito.num_orden }}</td>
+                                    <td> {{ merito.cadete.persona.nombre }}</td>
+                                    <td> {{ merito.disciplina.nombre }}</td>
+                                    <td> {{ merito.encargado.persona.nombre }}</td>
+                                    <td> {{ merito.created_at }}</td>
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
@@ -92,17 +85,45 @@
                         </div>
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Cadetes</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre del premio">                                        
+                                        <v-select
+                                                @search="selectCadete"
+                                                label="nombre"
+                                                :options="arrayCadete"
+                                                placeholder="Buscar Cadete..."
+                                                @input="getDatosCadete"
+                                                :value="cadete"
+                                        >
+                                        </v-select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Disciplinas</label>
+                                    <div class="col-md-9">
+                                        <v-select
+                                                @search="selectDisciplina"
+                                                label="nombre"
+                                                :options="arrayDisciplina"
+                                                placeholder="Buscar Disciplina..."
+                                                @input="getDatosDisciplina"
+                                                :value="disciplina"
+                                        >
+                                        </v-select>
                                     </div>
                                 </div>
 
-                                <div v-show="errorPremio" class="form-group row div-error">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Num Orden</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="num_orden" class="form-control" placeholder="Numero de Orden">
+                                    </div>
+                                </div>
+
+                                <div v-show="errorMerito" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjPremio" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjMerito" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -112,8 +133,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPremio()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPremio()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarMerito()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarMerito()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -125,17 +146,22 @@
 </template>
 
 <script>
+    import vSelect from 'vue-select';
+    import 'vue-select/dist/vue-select.css';
+
     export default {
         data (){
             return {
-                premio_id: 0,
-                nombre : '',
-                arrayPremio : [],
+                merito_id: 0,
+                cadete : {},
+                disciplina :  {},
+                num_orden : '',
+                arrayMerito : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorPremio : 0,
-                errorMostrarMsjPremio : [],
+                errorMerito : 0,
+                errorMostrarMsjMerito : [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -145,11 +171,15 @@
                     'to' : 0,
                 },
                 offset : 3,
-                criterio : 'nombre',
+                criterio : '',
                 buscar : '',
+                arrayCadete :[],
+                arrayDisciplina :[]
             }
         },
-
+        components: {
+            vSelect
+        },
         computed:{
             isActived: function(){
                 return this.pagination.current_page;
@@ -180,61 +210,126 @@
             }
         },
         methods : {
-            listarPremio (page,buscar,criterio){
+            listarMerito (page,buscar,criterio){
                 let me=this;
-                var url= '/premio?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
-                axios.get(url).then(function (response) {
-                    var respuesta= response.data;
-                    me.arrayPremio = respuesta.premios.data;
+                console.log('listar');
+                var data = {
+                    page: page,
+                    buscar: buscar,
+                    criterio: criterio
+                };
+
+                axios({
+                    url: '/api/meritos',
+                    method: 'GET',
+                    params: data
+                }).then(function (response) {
+                    var respuesta= response.data.results;
+                    me.arrayMerito = respuesta.meritos.data;
                     me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
+            selectDisciplina(search, loading){
+                let me=this;
+                axios({
+                    url: '/api/disciplinas',
+                    method: 'GET',
+                    params: {
+                        limit: 10,
+                        search:search
+                    }
+                }).then(function (response) {
+                    let respuesta = response.data.results;
+                    q: search;
+                    me.arrayDisciplina = respuesta.disciplinas.data;
+                    loading(false);
+                }).catch(function (error) {
+                        console.log(error);
+                });
+            },
+            selectCadete(search, loading){
+                let me=this;
+                axios({
+                    url: '/api/cadetes/search',
+                    method: 'GET',
+                    params: {
+                        limit: 10,
+                        search: search
+                    }
+                }).then(function (response) {
+                    let respuesta = response.data.results;
+                    q: search;
+                    me.arrayCadete = respuesta;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            getDatosCadete(val1){
+                let me = this;
+                me.cadete = val1;
+            },
+            getDatosDisciplina(val1){
+                let me = this;
+                me.disciplina = val1;
+            },
             cambiarPagina(page,buscar,criterio){
                 let me = this;
                 //Actualiza la página actual
                 me.pagination.current_page = page;
                 //Envia la petición para visualizar la data de esa página
-                me.listarPremio(page,buscar,criterio);
+                me.listarMerito(page,buscar,criterio);
             },
-            registrarPremio(){
-                if (this.validarPremio()){
+            registrarMerito(){
+                if (this.validarMerito()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.post('/premio/registrar',{
-                    'nombre': this.nombre,
+                axios({
+                    url: '/api/meritos',
+                    method: 'POST',
+                    params: {
+                        'disciplinaId': this.disciplina.id,
+                        'cadeteId': this.cadete.id,
+                        'num_orden': this.num_orden,
+                    }
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarPremio(1,'','nombre');
+                    me.listarMerito(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            actualizarPremio(){
-               if (this.validarPremio()){
+            actualizarMerito(){
+               if (this.validarMerito()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.put('/premio/actualizar',{
-                    'nombre': this.nombre,
-                    'id': this.premio_id
+                axios({
+                    url: '/api/meritos/'+this.merito_id,
+                    method: 'PUT',
+                    params: {
+                        'disciplinaId': this.disciplina.id,
+                        'cadeteId': this.cadete.id,
+                        'num_orden': this.num_orden,
+                        'id': this.merito_id
+                    }
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarPremio(1,'','nombre');
+                    me.listarMerito(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 }); 
             },
-            desactivarPremio(id){
+            eliminarMerito(id){
                swal({
-                title: 'Esta seguro de desactivar este premio?',
+                title: 'Esta seguro de Eliminar esta Merito?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -249,13 +344,14 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/premio/desactivar',{
-                        'id': id
+                    axios({
+                        url: '/api/meritos/'+id,
+                        method: 'DELETE',
                     }).then(function (response) {
-                        me.listarPremio(1,'','nombre');
+                        me.listarMerito(1,'','nombre');
                         swal(
-                        'Desactivado!',
-                        'El registro ha sido desactivado con éxito.',
+                        'Eliminado!',
+                        'El registro ha sido eliminado con éxito.',
                         'success'
                         )
                     }).catch(function (error) {
@@ -271,71 +367,35 @@
                 }
                 }) 
             },
-            activarPremio(id){
-               swal({
-                title: 'Esta seguro de activar este premio?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me = this;
+            validarMerito(){
+                this.errorMerito=0;
+                this.errorMostrarMsjMerito =[];
 
-                    axios.put('/premio/activar',{
-                        'id': id
-                    }).then(function (response) {
-                        me.listarPremio(1,'','nombre');
-                        swal(
-                        'Activado!',
-                        'El registro ha sido activado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    
-                }
-                }) 
-            },
-            validarPremio(){
-                this.errorPremio=0;
-                this.errorMostrarMsjPremio =[];
+                if (typeof this.disciplina.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione una disciplina.");
+                if (typeof this.cadete.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione un cadete.");
 
-                if (!this.nombre) this.errorMostrarMsjPremio.push("El nombre del premio no puede estar vacío.");
+                if (this.errorMostrarMsjMerito.length) this.errorMerito = 1;
 
-                if (this.errorMostrarMsjPremio.length) this.errorPremio = 1;
-
-                return this.errorPremio;
+                return this.errorMerito;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombre = '';
-		        this.errorPremio=0;
+                this.cadete= {};
+                this.disciplina= {};
+                this.num_orden = '';
+		        this.errorMerito=0;
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "premio":
+                    case "merito":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Premio';
-                                this.nombre= '';
+                                this.tituloModal = 'Registrar Merito';
+                                this.num_orden= '';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -343,19 +403,23 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Premio';
+                                this.tituloModal='Actualizar Merito';
                                 this.tipoAccion=2;
-                                this.premio_id=data['id'];
-                                this.nombre = data['nombre'];
+                                this.merito_id=data['id'];
+                                this.disciplina=data['disciplina'];
+                                this.cadete=data['cadete'];
+                                this.num_orden = data['num_orden'];
                                 break;
                             }
                         }
                     }
                 }
+                this.selectCadete();
+                this.selectDisciplina();
             }
         },
         mounted() {
-            this.listarPremio(1,this.buscar,this.criterio);
+            this.listarMerito(1,this.buscar,this.criterio);
         }
     }
 </script>

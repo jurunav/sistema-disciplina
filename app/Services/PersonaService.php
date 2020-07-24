@@ -34,8 +34,12 @@ class PersonaService extends BaseService
         $this->errors = new MessageBag();
     }
 
+    public function getByUser(User $user) {
+        return $this->personaRepository->getByUser($user);
+    }
+
     public function getById($id) {
-        $this->personaRepository->getById($id);
+        return $this->personaRepository->getById($id);
     }
 
     public function getAll() {
