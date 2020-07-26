@@ -42,8 +42,19 @@ class PersonaService extends BaseService
         return $this->personaRepository->getById($id);
     }
 
-    public function getAll() {
-        return $this->personaRepository->getAll();
+    /**
+     * @param array $data
+     * @return Persona[]|\Illuminate\Support\Collection
+     */
+    public function getAll($data) {
+        return $this->personaRepository->getAll(
+            array_get($data, 'limit', 10),
+            array_get($data, 'offset', 0),
+            array_get($data, 'order', [['col' => 'p.created_at', 'dir' => 'desc']]),
+            array_get($data, 'buscar', null),
+            array_get($data, 'criterio', null),
+            array_get($data, 'filters', [])
+        );
     }
 
     public function create($data, User $user = null) {

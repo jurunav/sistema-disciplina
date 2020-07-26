@@ -22,6 +22,7 @@ Vue.component('sancion', require('./components/Sancion.vue'));
 Vue.component('oficial', require('./components/Oficial.vue'));
 Vue.component('cadete', require('./components/Cadete.vue'));
 Vue.component('merito', require('./components/Merito.vue'));
+Vue.component('demerito', require('./components/Demerito.vue'));
 Vue.component('rol', require('./components/Rol.vue'));
 Vue.component('user', require('./components/User.vue'));
 

@@ -2,12 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Sancion extends Model
+class Sancion extends BaseModel
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'sanciones';
-    protected $fillable =['nombre','puntaje','puntaje_dia','categoria','articulo','grupo','inciso','condicion'];
-    
 
 }

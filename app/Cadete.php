@@ -26,7 +26,7 @@ class Cadete extends BaseModel
 
     public function persona()
     {
-        return $this->belongsTo('App\Persona');
+        return $this->belongsTo(Persona::class, 'persona_id', 'id');
     }
 
     public function meritos() {

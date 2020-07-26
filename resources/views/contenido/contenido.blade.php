@@ -25,7 +25,7 @@
             <merito></merito>
         </template>
         <template v-if="menu==8" >
-            <user></user>
+            <demerito></demerito>
         </template>
         <template v-if="menu==9" >
             <h1>Contenido del menu 9</h1>

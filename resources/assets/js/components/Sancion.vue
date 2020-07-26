@@ -146,7 +146,13 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Grupo</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="grupo" class="form-control" placeholder="Grupo de la sanción">                                        
+                                        <select v-model="grupo" class="form-control">
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                            <option value="E">E</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
