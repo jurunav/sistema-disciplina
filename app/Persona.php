@@ -36,11 +36,11 @@ class Persona extends BaseModel
     }
 
     public function cadete(){
-        return $this->hasOne(Cadete::class);
+        return $this->hasOne(Cadete::class, 'persona_id');
     }
 
     public function encargado(){
-        return $this->hasOne(Encargado::class);
+        return $this->hasOne(Encargado::class, 'persona_id');
     }
 
     public function toArray()

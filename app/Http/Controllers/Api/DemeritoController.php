@@ -6,29 +6,29 @@ namespace App\Http\Controllers\Api;
 use App\Cadete;
 use App\Http\Controllers\Controller;
 use App\Models\Merito;
-use App\Models\Disciplina;
+use App\Sancion;
 use App\Persona;
 use App\Services\CadeteService;
+use App\Services\DemeritoService;
 use App\Services\EncargadoService;
-use App\Services\MeritoService;
-use App\Services\DisciplinaService;
+use App\Services\SancionService;
 use App\Services\PersonaService;
 use App\User;
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
 
-class MeritoController extends Controller
+class DemeritoController extends Controller
 {
 
     /**
-     * @var DedemeritoService $demeritoService
+     * @var DemeritoService $demeritoService
      */
     protected $demeritoService;
 
     /**
-     * @var DisciplinaService $disciplinaService
+     * @var SancionService $sancionService
      */
-    protected $disciplinaService;
+    protected $sancionService;
 
     /**
      * @var CadeteService $cadeteService
@@ -47,25 +47,25 @@ class MeritoController extends Controller
 
     /**
      * MeritoController constructor.
-     * @param MeritoService $demeritoService
-     * @param DisciplinaService $disciplinaService
+     * @param DemeritoService $demeritoService
+     * @param SancionService $sancionService
      * @param CadeteService $cadeteService
      * @param EncargadoService $encargadoService
      * @param PersonaService $personaService
      */
-    public function __construct(MeritoService $demeritoService, DisciplinaService $disciplinaService,
+    public function __construct(DemeritoService $demeritoService, SancionService $sancionService,
                                 CadeteService $cadeteService, EncargadoService $encargadoService,
                                 PersonaService $personaService)
     {
         $this->demeritoService = $demeritoService;
-        $this->disciplinaService = $disciplinaService;
+        $this->sancionService = $sancionService;
         $this->cadeteService = $cadeteService;
         $this->encargadoService = $encargadoService;
         $this->personaService = $personaService;
     }
 
     public function index(Request $request) {
-        $apiRes = new ApiResponse('Meritos');
+        $apiRes = new ApiResponse('Demeritos');
         $demeritoList = $this->demeritoService->getAll($request->input());
 
         $apiRes->results['demeritos'] = $demeritoList;
@@ -87,7 +87,7 @@ class MeritoController extends Controller
          * @var Merito $demerito
          */
         $demerito = $this->demeritoService->getById($id);
-        $apiRes = new ApiResponse('Merito');
+        $apiRes = new ApiResponse('Demerito');
 
         if (is_null($demerito)) {
             $apiRes->errors->add('general', 'El demerito no se encuentra');
@@ -100,23 +100,24 @@ class MeritoController extends Controller
 
     public function store(Request $request) {
         $user = \Auth::user();
-        $apiRes = new ApiResponse('Merito');
+        $user = User::find(2);
+        $apiRes = new ApiResponse('Demerito');
 
         /**
          * Obtener el encargado u oficial por el ID del user
          */
         $encargado = $this->encargadoService->getByUser($user);
 
-        $disciplina = null;
-        if ($request->has('disciplinaId')) {
+        $sancion = null;
+        if ($request->has('sancionId')) {
             /**
-             * @var Disciplina $disciplina
+             * @var Sancion $sancion
              */
-            $disciplina = $this->disciplinaService->getById($request->input('disciplinaId'));
+            $sancion = $this->sancionService->getById($request->input('sancionId'));
         }
 
-        if (is_null($disciplina)) {
-            $apiRes->errors->add('general', 'El registro Disciplina no fue encontrado');
+        if (is_null($sancion)) {
+            $apiRes->errors->add('general', 'El registro Sancion no fue encontrado');
             return response()->json($apiRes, 404);
         }
 
@@ -146,7 +147,7 @@ class MeritoController extends Controller
             return response()->json($apiRes, 404);
         }
 
-        $demerito = $this->demeritoService->create($cadete, $disciplina, $sancionador, $encargado, $request->input());
+        $demerito = $this->demeritoService->create($cadete, $sancion, $sancionador, $encargado, $request->input());
 
         if ($this->demeritoService->hasErrors()) {
             $apiRes->errors->merge($this->demeritoService->getErrors());
@@ -159,23 +160,24 @@ class MeritoController extends Controller
 
     public function update(Request $request, $id) {
         $user = \Auth::user();
-        $apiRes = new ApiResponse('Merito');
+        $user = User::find(2);
+        $apiRes = new ApiResponse('Demerito');
 
         /**
          * Obtener el encargado u oficial por el ID del user
          */
         $encargado = $this->encargadoService->getByUser($user);
 
-        $disciplina = null;
-        if ($request->has('disciplinaId')) {
+        $sancion = null;
+        if ($request->has('sancionId')) {
             /**
-             * @var Disciplina $disciplina
+             * @var Sancion $sancion
              */
-            $disciplina = $this->disciplinaService->getById($request->input('disciplinaId'));
+            $sancion = $this->sancionService->getById($request->input('sancionId'));
         }
 
-        if (is_null($disciplina)) {
-            $apiRes->errors->add('general', 'El registro Disciplina no fue encontrado');
+        if (is_null($sancion)) {
+            $apiRes->errors->add('general', 'El registro Sancion no fue encontrado');
             return response()->json($apiRes, 404);
         }
 
@@ -212,7 +214,7 @@ class MeritoController extends Controller
             return response()->json($apiRes, 404);
         }
 
-        $demerito = $this->demeritoService->update($demerito, $cadete, $disciplina, $sancionador, $encargado, $request->input());
+        $demerito = $this->demeritoService->update($demerito, $cadete, $sancion, $sancionador, $encargado, $request->input());
         if ($this->demeritoService->hasErrors()) {
             $apiRes->errors->merge($this->demeritoService->getErrors());
             return response()->json($apiRes, 400);

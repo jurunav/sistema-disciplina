@@ -41,7 +41,7 @@ class SancionController extends Controller
         $sancion = new Sancion();
         $sancion->nombre = $request->nombre;
         $sancion->puntaje = $request->puntaje;
-        $sancion->puntaje_dia = $request->puntaje_dia;
+        $sancion->puntaje_dia = round($request->puntaje_dia, 2);
         $sancion->categoria = $request->categoria;
         $sancion->articulo = $request->articulo;
         $sancion->grupo = $request->grupo;
@@ -55,7 +55,7 @@ class SancionController extends Controller
         $sancion = Sancion::findOrFail($request->id);
         $sancion->nombre = $request->nombre;
         $sancion->puntaje = $request->puntaje;
-        $sancion->puntaje_dia = $request->puntaje_dia;
+        $sancion->puntaje_dia = round($request->puntaje_dia, 2);
         $sancion->categoria = $request->categoria;
         $sancion->articulo = $request->articulo;
         $sancion->grupo = $request->grupo;

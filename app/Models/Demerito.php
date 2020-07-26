@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Cadete;
 use App\Persona;
+use App\Sancion;
 
 class Demerito extends BaseModel
 {
@@ -27,8 +28,8 @@ class Demerito extends BaseModel
         return $this->belongsTo(Cadete::class);
     }
 
-    public function disciplina(){
-        return $this->belongsTo(Disciplina::class);
+    public function sancion(){
+        return $this->belongsTo(Sancion::class);
     }
 
     public function sancionador(){
@@ -43,8 +44,8 @@ class Demerito extends BaseModel
     {
         $array = parent::attributesToArray();
         $array['cadete'] = $this->cadete;
-        $array['disciplina'] = $this->disciplina;
-        $array['sancionador'] = $this->persona;
+        $array['sancion'] = $this->sancion;
+        $array['sancionador'] = $this->sancionador;
         $array['encargado'] = $this->encargado;
         return $array;
     }

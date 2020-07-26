@@ -4,11 +4,11 @@ namespace App\Services;
 
 
 use App\Cadete;
-use App\Models\Disciplina;
 use App\Models\Encargado;
 use App\Models\Demerito;
 use App\Persona;
 use App\Repositories\DemeritoRepository;
+use App\Sancion;
 
 class DemeritoService extends BaseService
 {
@@ -48,17 +48,17 @@ class DemeritoService extends BaseService
 
     /**
      * @param Cadete $cadete
-     * @param Disciplina $disciplina
+     * @param Sancion $sancion
      * @param Persona $sancionador
      * @param Encargado $encargado
      * @param $data
      * @return Demerito
      */
-    public function create(Cadete $cadete, Disciplina $disciplina, Persona $sancionador, Encargado $encargado, $data) {
+    public function create(Cadete $cadete, Sancion $sancion, Persona $sancionador, Encargado $encargado, $data) {
         $demerito = new Demerito();
 
-        if (array_key_exists('can_dia', $data)) {
-            $demerito->num_orden = $data['can_dia'];
+        if (array_key_exists('cant_dia', $data)) {
+            $demerito->cant_dia = $data['cant_dia'];
         }
 
         if (array_key_exists('num_orden', $data)) {
@@ -66,7 +66,7 @@ class DemeritoService extends BaseService
         }
 
         $demerito->cadete()->associate($cadete);
-        $demerito->disciplina()->associate($disciplina);
+        $demerito->sancion()->associate($sancion);
         $demerito->sancionador()->associate($sancionador);
         $demerito->encargado()->associate($encargado);
 
@@ -76,18 +76,18 @@ class DemeritoService extends BaseService
 
     /**
      * @param Demerito $demerito
-     * @param Disciplina $disciplina
+     * @param Sancion $sancion
      * @param Cadete $cadete
      * @param $data
      * @param Encargado $encargado
      * @return Demerito
      */
-    public function update(Demerito $demerito, Cadete $cadete, Disciplina $disciplina, Persona $sancionador,
+    public function update(Demerito $demerito, Cadete $cadete, Sancion $sancion, Persona $sancionador,
                            Encargado $encargado, $data
     ) {
 
-        if (array_key_exists('can_dia', $data)) {
-            $demerito->num_orden = $data['can_dia'];
+        if (array_key_exists('cant_dia', $data)) {
+            $demerito->cant_dia = $data['cant_dia'];
         }
 
         if (array_key_exists('num_orden', $data)) {
@@ -96,7 +96,7 @@ class DemeritoService extends BaseService
 
 
         $demerito->cadete()->associate($cadete);
-        $demerito->disciplina()->associate($disciplina);
+        $demerito->sancion()->associate($sancion);
         $demerito->sancionador()->associate($sancionador);
         $demerito->encargado()->associate($encargado);
 

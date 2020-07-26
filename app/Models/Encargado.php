@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Persona;
 
-class Encargado extends Persona
+class Encargado extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -14,7 +14,7 @@ class Encargado extends Persona
     protected $table = 'encargados';
 
     /**
-     * Persona constructor.
+     * Encargado constructor.
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
@@ -23,7 +23,7 @@ class Encargado extends Persona
     }
 
     public function persona(){
-        return $this->belongsTo(Persona::class);
+        return $this->belongsTo(Persona::class, 'persona_id', 'id');
     }
 
     public function toArray()

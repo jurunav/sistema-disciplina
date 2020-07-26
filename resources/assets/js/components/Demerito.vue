@@ -8,8 +8,8 @@
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Meritos
-                    <button type="button" @click="abrirModal('merito','registrar')" class="btn btn-secondary">
+                    <i class="fa fa-align-justify"></i> Dedemeritos
+                    <button type="button" @click="abrirModal('demerito','registrar')" class="btn btn-secondary">
                         <i class="icon-plus"></i>&nbsp;Nuevo
                     </button>
                 </div>
@@ -20,8 +20,8 @@
                                 <select class="form-control col-md-3" v-model="criterio">
                                     <option value="num_orden">Numero de Orden</option>
                                 </select>
-                                <input type="text" v-model="buscar" @keyup.enter="listarMerito(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" @click="listarMerito(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                <input type="text" v-model="buscar" @keyup.enter="listarDemerito(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                <button type="submit" @click="listarDemerito(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -31,28 +31,32 @@
                             <th>Opciones</th>
                             <th>Num Orden</th>
                             <th>Cadete</th>
-                            <th>Disciplina</th>
+                            <th>Sanción</th>
+                            <th>Sancionador</th>
+                            <th>Cant Dia</th>
                             <th>Oficial/Encargado</th>
                             <th>Creado</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="merito in arrayMerito" :key="merito.id">
+                        <tr v-for="demerito in arrayDemerito" :key="demerito.id">
                             <td>
-                                <button type="button" @click="abrirModal('merito','actualizar',merito)" class="btn btn-warning btn-sm">
+                                <button type="button" @click="abrirModal('demerito','actualizar',demerito)" class="btn btn-warning btn-sm">
                                     <i class="icon-pencil"></i>
                                 </button> &nbsp;
-                                <template v-if="merito.id">
-                                    <button type="button" class="btn btn-danger btn-sm" @click="eliminarMerito(merito.id)">
+                                <template v-if="demerito.id">
+                                    <button type="button" class="btn btn-danger btn-sm" @click="eliminarDemerito(demerito.id)">
                                         <i class="icon-trash"></i>
                                     </button>
                                 </template>
                             </td>
-                            <td> {{ merito.num_orden }}</td>
-                            <td> {{ merito.cadete.persona.nombre }}</td>
-                            <td> {{ merito.disciplina.nombre }}</td>
-                            <td> {{ merito.encargado.persona.nombre }}</td>
-                            <td> {{ merito.created_at }}</td>
+                            <td> {{ demerito.num_orden }}</td>
+                            <td> {{ demerito.cadete.persona.nombre }}</td>
+                            <td> {{ demerito.sancion.nombre }}</td>
+                            <td> {{ demerito.sancionador.nombre }}</td>
+                            <td> {{ demerito.cant_dia }}</td>
+                            <td> {{ demerito.encargado.persona.nombre }}</td>
+                            <td> {{ demerito.created_at }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -100,15 +104,37 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Disciplinas</label>
+                                <label class="col-md-3 form-control-label" for="text-input">Sanciones</label>
                                 <div class="col-md-9">
                                     <v-select
-                                            @search="selectDisciplina"
+                                            @search="selectSancion"
                                             label="nombre"
-                                            :options="arrayDisciplina"
-                                            placeholder="Buscar Disciplina..."
-                                            @input="getDatosDisciplina"
-                                            :value="disciplina"
+                                            :options="arraySancion"
+                                            placeholder="Buscar Sancion..."
+                                            @input="getSancion"
+                                            :value="sancion"
+                                    >
+                                    </v-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" v-if="sancion.categoria === 'Extraordinario' && sancion.puntaje_dia">
+                                <label class="col-md-3 form-control-label" for="text-input">Cantidad Dia</label>
+                                <div class="col-md-9">
+                                    <input type="number" v-model="cant_dia" class="form-control" placeholder="Cantidad dias">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input">Sancionador</label>
+                                <div class="col-md-9">
+                                    <v-select
+                                            @search="selectSancionador"
+                                            label="nombre"
+                                            :options="arraySancionador"
+                                            placeholder="Buscar Sancionador..."
+                                            @input="getDatosSancionador"
+                                            :value="sancionador"
                                     >
                                     </v-select>
                                 </div>
@@ -121,9 +147,9 @@
                                 </div>
                             </div>
 
-                            <div v-show="errorMerito" class="form-group row div-error">
+                            <div v-show="errorDemerito" class="form-group row div-error">
                                 <div class="text-center text-error">
-                                    <div v-for="error in errorMostrarMsjMerito" :key="error" v-text="error">
+                                    <div v-for="error in errorMostrarMsjDemerito" :key="error" v-text="error">
 
                                     </div>
                                 </div>
@@ -133,8 +159,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                        <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarMerito()">Guardar</button>
-                        <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarMerito()">Actualizar</button>
+                        <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarDemerito()">Guardar</button>
+                        <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDemerito()">Actualizar</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -148,19 +174,22 @@
 <script>
     import vSelect from 'vue-select';
     import 'vue-select/dist/vue-select.css';
+
     export default {
         data (){
             return {
-                merito_id: 0,
+                demerito_id: 0,
                 cadete : {},
-                disciplina :  {},
+                sancion :  {},
+                sancionador :  {},
                 num_orden : '',
-                arrayMerito : [],
+                cant_dia : 0,
+                arrayDemerito : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorMerito : 0,
-                errorMostrarMsjMerito : [],
+                errorDemerito : 0,
+                errorMostrarMsjDemerito : [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -173,7 +202,8 @@
                 criterio : '',
                 buscar : '',
                 arrayCadete :[],
-                arrayDisciplina :[]
+                arraySancion :[],
+                arraySancionador :[]
             }
         },
         components: {
@@ -206,31 +236,30 @@
             }
         },
         methods : {
-            listarMerito (page,buscar,criterio){
+            listarDemerito (page,buscar,criterio){
                 let me=this;
-                console.log('listar');
                 var data = {
                     page: page,
                     buscar: buscar,
                     criterio: criterio
                 };
+
                 axios({
-                    url: '/api/meritos',
+                    url: '/api/demeritos',
                     method: 'GET',
                     params: data
                 }).then(function (response) {
                     var respuesta= response.data.results;
-                    me.arrayMerito = respuesta.meritos.data;
+                    me.arrayDemerito = respuesta.demeritos.data;
                     me.pagination= respuesta.pagination;
-                })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                }).catch(function (error) {
+                    console.log(error);
+                });
             },
-            selectDisciplina(search, loading){
+            selectSancion(search){
                 let me=this;
                 axios({
-                    url: '/api/disciplinas',
+                    url: '/api/sanciones',
                     method: 'GET',
                     params: {
                         limit: 10,
@@ -239,13 +268,12 @@
                 }).then(function (response) {
                     let respuesta = response.data.results;
                     q: search;
-                    me.arrayDisciplina = respuesta.disciplinas.data;
-                    loading(false);
+                    me.arraySancion = respuesta.sanciones.data;
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            selectCadete(search, loading){
+            selectCadete(search){
                 let me=this;
                 axios({
                     url: '/api/cadetes/search',
@@ -262,67 +290,106 @@
                     console.log(error);
                 });
             },
+            selectSancionador(search){
+                let me=this;
+                axios({
+                    url: '/api/personas',
+                    method: 'GET',
+                    params: {
+                        limit: 10,
+                        search: search,
+                        criterio: 'nombre',
+                        filters: {
+                            withCadeteOnly: true,
+                            finalStage: true,
+                            withEncargadoOnly: true
+                        }
+                    },
+                    paramsSerializer: function (params) {
+                        return qs.stringify(params, {arrayFormat: 'brackets'})
+                    },
+                }).then(function (response) {
+                    let respuesta = response.data.results;
+                    q: search;
+                    me.arraySancionador = respuesta.personas.data
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
             getDatosCadete(val1){
                 let me = this;
                 me.cadete = val1;
             },
-            getDatosDisciplina(val1){
+            getSancion(val1){
                 let me = this;
-                me.disciplina = val1;
+                me.sancion = val1;
+            },
+            getDatosSancionador(val1){
+                let me = this;
+                me.sancionador = val1;
             },
             cambiarPagina(page,buscar,criterio){
                 let me = this;
                 //Actualiza la página actual
                 me.pagination.current_page = page;
                 //Envia la petición para visualizar la data de esa página
-                me.listarMerito(page,buscar,criterio);
+                me.listarDemerito(page,buscar,criterio);
             },
-            registrarMerito(){
-                if (this.validarMerito()){
+            registrarDemerito(){
+                if (this.validarDemerito()){
                     return;
                 }
 
                 let me = this;
+
                 axios({
-                    url: '/api/meritos',
+                    url: '/api/demeritos',
                     method: 'POST',
                     params: {
-                        'disciplinaId': this.disciplina.id,
+                        'sancionId': this.sancion.id,
                         'cadeteId': this.cadete.id,
+                        'sancionadorId': this.sancionador.id,
                         'num_orden': this.num_orden,
+                        'cant_dia': this.cant_dia
                     }
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarMerito(1,'','nombre');
+                    me.listarDemerito(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            actualizarMerito(){
-                if (this.validarMerito()){
+            actualizarDemerito(){
+                if (this.validarDemerito()){
                     return;
                 }
 
                 let me = this;
+                if (this.sancion.puntaje) {
+                    this.cant_dia = 0;
+                }
+
                 axios({
-                    url: '/api/meritos/'+this.merito_id,
+                    url: '/api/demeritos/'+this.demerito_id,
                     method: 'PUT',
                     params: {
-                        'disciplinaId': this.disciplina.id,
+                        'sancionId': this.sancion.id,
                         'cadeteId': this.cadete.id,
+                        'sancionadorId': this.sancionador.id,
                         'num_orden': this.num_orden,
-                        'id': this.merito_id
+                        'cant_dia': this.cant_dia,
+                        'id': this.demerito_id
                     }
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarMerito(1,'','nombre');
+                    me.listarDemerito(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            eliminarMerito(id){
+            eliminarDemerito(id){
                 swal({
-                    title: 'Esta seguro de Eliminar esta Merito?',
+                    title: 'Esta seguro de Eliminar esta Demerito?',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -336,11 +403,12 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
+
                         axios({
-                            url: '/api/meritos/'+id,
+                            url: '/api/demeritos/'+id,
                             method: 'DELETE',
                         }).then(function (response) {
-                            me.listarMerito(1,'','nombre');
+                            me.listarDemerito(1,'','nombre');
                             swal(
                                 'Eliminado!',
                                 'El registro ha sido eliminado con éxito.',
@@ -359,31 +427,36 @@
                     }
                 })
             },
-            validarMerito(){
-                this.errorMerito=0;
-                this.errorMostrarMsjMerito =[];
-                if (typeof this.disciplina.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione una disciplina.");
-                if (typeof this.cadete.id === 'undefined') this.errorMostrarMsjMerito.push("Seleccione un cadete.");
-                if (this.errorMostrarMsjMerito.length) this.errorMerito = 1;
-                return this.errorMerito;
+            validarDemerito(){
+                this.errorDemerito=0;
+                this.errorMostrarMsjDemerito =[];
+
+                if (typeof this.sancion.id === 'undefined') this.errorMostrarMsjDemerito.push("Seleccione una sancion.");
+                if (typeof this.cadete.id === 'undefined') this.errorMostrarMsjDemerito.push("Seleccione un cadete.");
+                if (typeof this.sancionador.id === 'undefined') this.errorMostrarMsjDemerito.push("Seleccione un sancionador.");
+
+                if (this.errorMostrarMsjDemerito.length) this.errorDemerito = 1;
+
+                return this.errorDemerito;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
                 this.cadete= {};
-                this.disciplina= {};
+                this.sancion= {};
+                this.sancionador= {};
                 this.num_orden = '';
-                this.errorMerito=0;
+                this.errorDemerito=0;
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "merito":
+                    case "demerito":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Merito';
+                                this.tituloModal = 'Registrar Demerito';
                                 this.num_orden= '';
                                 this.tipoAccion = 1;
                                 break;
@@ -392,23 +465,26 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Merito';
+                                this.tituloModal='Actualizar Demerito';
                                 this.tipoAccion=2;
-                                this.merito_id=data['id'];
-                                this.disciplina=data['disciplina'];
+                                this.demerito_id=data['id'];
+                                this.sancion=data['sancion'];
                                 this.cadete=data['cadete'];
+                                this.sancionador=data['sancionador'];
                                 this.num_orden = data['num_orden'];
+                                this.cant_dia = data['cant_dia'];
                                 break;
                             }
                         }
                     }
                 }
                 this.selectCadete();
-                this.selectDisciplina();
+                this.selectSancion();
+                this.selectSancionador();
             }
         },
         mounted() {
-            this.listarMerito(1,this.buscar,this.criterio);
+            this.listarDemerito(1,this.buscar,this.criterio);
         }
     }
 </script>
