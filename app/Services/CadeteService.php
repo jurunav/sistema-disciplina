@@ -40,4 +40,17 @@ class CadeteService extends BaseService
         );
     }
 
+    /**
+     * @param array $data
+     * @return Cadete[]|\Illuminate\Support\Collection
+     */
+    public function getAllFrancoDeHonor($data) {
+        return $this->cadeteRepository->getAllFrancoDeHonor(
+            array_get($data, 'limit', 10),
+            array_get($data, 'offset', 0),
+            array_get($data, 'order', [['col' => 'p.created_at', 'dir' => 'desc']]),
+            array_get($data, 'filters', [])
+        );
+    }
+
 }

@@ -59756,12 +59756,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (from < 1) {
                 from = 1;
             }
-
             var to = from + this.offset * 2;
             if (to >= this.pagination.last_page) {
                 to = this.pagination.last_page;
             }
-
             var pagesArray = [];
             while (from <= to) {
                 pagesArray.push(from);
