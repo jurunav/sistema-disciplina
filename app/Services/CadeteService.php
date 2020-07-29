@@ -41,26 +41,15 @@ class CadeteService extends BaseService
     }
 
     /**
-     * @param array $data
+     * @param array $filters
      * @return Cadete[]|\Illuminate\Support\Collection
      */
-    public function getAllFrancoDeHonor($data) {
-        return $this->cadeteRepository->getAllFrancoDeHonor(
-            array_get($data, 'limit', 10),
-            array_get($data, 'offset', 0),
-            array_get($data, 'order', [['col' => 'c.year_ingreso', 'dir' => 'desc'], ['col' => 'p.nombre', 'dir' => 'asc']]),
-            array_get($data, 'startDate', null),
-            array_get($data, 'endDate', null),
-            array_get($data, 'filters', [])
-        );
+    public function getAllFrancoDeHonor($filters) {
+        return $this->cadeteRepository->getAllFrancoDeHonor($filters);
     }
 
-    public function countAllFrancoDeHonor($data) {
-        return $this->cadeteRepository->countAllFrancoDeHonor(
-            array_get($data, 'startDate', null),
-            array_get($data, 'endDate', null),
-            array_get($data, 'filters', [])
-        );
+    public function countAllFrancoDeHonor($filters) {
+        return $this->cadeteRepository->countAllFrancoDeHonor($filters);
     }
 
 }

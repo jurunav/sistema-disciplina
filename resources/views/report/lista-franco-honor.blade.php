@@ -88,10 +88,7 @@
         <h3 style="text-align: center">LISTA DE FRANCO Y ARRESTOS DE LAS DAMAS Y CABALLEROS <br> CADETES DEL COLEGIO MILITAR DE AVIACION</h3>
     </div>
     <div style="width: 50%;margin: 0 auto">
-        <h3 style="text-align: left">I. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES
-            QUE TIENEN SALIDA DE FRANCO DE HONOR DESDE EL DIA
-            SABADO 29/02/2020 DE HRS. 10:30 A 21:00 HRS. Y DIA DOMINGO
-            01/03/2020 DE 07:00 A 21:00 HRS.
+        <h3 style="text-align: left">{{$titular}}
         </h3>
     </div>
     <div>
@@ -110,32 +107,30 @@
                     <h3><u>PRIMER AÑO MILITAR</u></h3>
                 @endif
             </div>
-        <table class="table">
+            <table class="table">
                 <thead>
-                <tr>
-                    <th>Nº <br>GRAL</th>
-                    <th>Grado </th>
-                    <th>Apellido y Nombre </th>
-                </tr>
-            </thead>
-            <tbody>
-                    @foreach($cadeteList as $key => $cadete)
-                        <?php
-                            $arrayGrado = ["", "I" , "II", "III", "IV"];
-                            $numeroGrado = $arrayGrado[$cadete->year_ingreso];
-                        ?>
-                        <tr style="text-align: center">
-                            <td>{{$key + 1}} </td>
-                            <td>{{$cadete->grado}} {{$numeroGrado}} </td>
-                            <td style="text-align: left">{{$cadete->nombre}} </td>
-                        </tr>
-                    @endforeach
-            </tbody>
-        </table>
+                    <tr>
+                        <th>Nº <br>GRAL</th>
+                        <th>GRADO </th>
+                        <th>APELLIDO Y NOMBRE </th>
+                    </tr>
+                </thead>
+                <tbody>
+                        @foreach($cadeteList as $key => $cadete)
+                            <?php
+                                $arrayGrado = ["", "I" , "II", "III", "IV"];
+                                $numeroGrado = $arrayGrado[$cadete->year_ingreso];
+                            ?>
+                            <tr style="text-align: center">
+                                <td>{{$key + 1}} </td>
+                                <td>{{$cadete->grado}} {{$numeroGrado}} </td>
+                                <td style="text-align: left">{{$cadete->nombre}} </td>
+                            </tr>
+                        @endforeach
+                </tbody>
+                <strong>TOTAL CADETES : {{count($cadeteList)}}</strong>
+            </table>
         @endforeach
     </div>
-    <div class="izquierda">
-        <p><strong>Total de registros: </strong>{{$cadeteCount}}</p>
-    </div>    
 </body>
 </html>
