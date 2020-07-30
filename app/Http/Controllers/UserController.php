@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\User;
-use App\Persona;
-use App\Rol;
+
 
 class UserController extends Controller
 {
@@ -19,21 +18,10 @@ class UserController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-                   
-            $users = User::join('personas','users.idpersona','=','personas.id')
-            ->join('roles','users.idrol','=','roles.id')
-            ->select('users.id','personas.nombre','personas.grado',
-            'users.usuario','users.password','users.condicion','roles.nombre as nombre_rol')
-            ->orderBy('users.id', 'desc')->paginate(5);
+            $users = User::orderBy('id', 'desc')->paginate(10);
         }
         else{
-            $users = User::join('personas','users.idpersona','=','personas.id')
-            ->join('roles','users.idrol','=','roles.id')
-            ->select('users.id','personas.nombre','personas.grado',
-            'users.usuario','users.password','users.condicion','roles.nombre as nombre_rol') 
-
-            ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
-            ->orderBy('users.id', 'desc')->paginate(5);
+            $users = User::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(10);
         }
         
 
@@ -49,6 +37,7 @@ class UserController extends Controller
             'users' => $users
         ];
     }
+
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -57,11 +46,9 @@ class UserController extends Controller
             DB::beginTransaction();
             
             $user = new User();
-            $user->idpersona = $request->idpersona;
-            $user->idrol = $request->idrol;
-            $user->usuario = $request->usuario;
+            $user->name = $request->name;
+            $user->email = $request->email;
             $user->password = bcrypt( $request->password);
-            $user->condicion = '1';            
             $user->save();
 
             DB::commit();
@@ -72,43 +59,25 @@ class UserController extends Controller
 
 
     }
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         if (!$request->ajax()) return redirect('/');
-
-        try{
-            DB::beginTransaction();
-            
            
-            $user = User::findOrFail($request->id);
-            $user->idpersona = $request->idpersona;
-            $user->idrol = $request->idrol;
-            $user->usuario = $request->usuario;
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
             $user->password = bcrypt( $request->password);
-            $user->condicion = '1';
             $user->save();
 
-            DB::commit();
-
-        } catch (Exception $e){
-            DB::rollBack();
-        }
     }
 
-    public function desactivar(Request $request)
+
+    public function destroy(Request $request, $id)
     {
         if (!$request->ajax()) return redirect('/');
-        $user = User::findOrFail($request->id);
-        $user->condicion = '0';
-        $user->save();
-
+        $user = User::findOrFail($id);
+        $user->delete();
     }
 
-    public function activar(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/');
-        $user = User::findOrFail($request->id);
-        $user->condicion = '1';
-        $user->save();
-    }
+
 }

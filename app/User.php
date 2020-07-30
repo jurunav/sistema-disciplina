@@ -27,7 +27,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $fillable = [
-        'idpersona','idrol', 'usuario', 'password','condicion'
+        'name', 'email', 'password'
     ];
 
     protected $dateFormat = 'Y-m-d H:i:s';
@@ -59,14 +59,15 @@ class User extends BaseModel implements
         return $array;
     }
 
-    public function can($permission, $requireAll = false)
-    {
-        if ($this->hasRole('super_admin')) {
-            return true;
-        } else {
-            return $this->can($permission, $requireAll);
-        }
-    }
+/**     public function can($permission, $requireAll = false)
+ *   {
+ *       if ($this->hasRole('super_admin')) {
+ *           return true;
+ *       } else {
+ *           return $this->can($permission, $requireAll);
+ *       }
+ *   }
+*/
 
     public function getMaxRoleLevel() {
         $maxLevel = 0;
