@@ -68,3 +68,5 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/rol', 'RolController');
+
+Route::get('/report/franco-de-honor', 'GenerateReportController@listarFrancoDeHonor');

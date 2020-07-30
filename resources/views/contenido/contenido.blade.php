@@ -34,7 +34,7 @@
             <rol></rol>
         </template>
         <template v-if="menu==11" >
-            <h1>Contenido del menu 11</h1>
+            <lista-franco-de-honor></lista-franco-de-honor>
         </template>
         <template v-if="menu==12" >
             <h1>Contenido del menu 12</h1>

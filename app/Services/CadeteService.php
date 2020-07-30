@@ -40,4 +40,16 @@ class CadeteService extends BaseService
         );
     }
 
+    /**
+     * @param array $filters
+     * @return Cadete[]|\Illuminate\Support\Collection
+     */
+    public function getAllFrancoDeHonor($filters) {
+        return $this->cadeteRepository->getAllFrancoDeHonor($filters);
+    }
+
+    public function countAllFrancoDeHonor($filters) {
+        return $this->cadeteRepository->countAllFrancoDeHonor($filters);
+    }
+
 }
