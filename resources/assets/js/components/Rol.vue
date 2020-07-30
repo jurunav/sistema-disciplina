@@ -45,6 +45,7 @@
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
+                                        
                                         <!--<template v-else>-->
                                             <!--<button type="button" class="btn btn-info btn-sm" @click="activarRol(rol.id)">-->
                                                 <!--<i class="icon-check"></i>-->

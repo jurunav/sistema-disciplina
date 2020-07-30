@@ -23,6 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        auth()->$user->assignRole('Jefe de Sección Conducta y Disciplina');
         return view('home');
     }
 }

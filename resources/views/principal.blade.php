@@ -12,6 +12,11 @@
     <title>Sistema SICOCODI</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
     <!-- Icons -->
     <link href="css/plantilla.css" rel="stylesheet">
 
@@ -58,22 +63,41 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <img src="img/avatars/2.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
-                        <span class="d-md-down-none">admin </span>
+                        <span class="d-md-down-none">{{Auth::user()->name}} </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-header text-center">
                             <strong>Cuenta</strong>
                         </div>
-                        <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Perfil</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Cerrar sesión</a>
+                        
+                        <a class="dropdown-item" href="{{ route('logout') }}" 
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fa fa-lock"></i> Cerrar sesión</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+
+                        </form>
                     </div>
                 </li>
             </ul>
         </header>
 
         <div class="app-body">
+            @if(Auth::check())
+                @if (Auth::user()->roles[0]->id == 1)
+                    @include('contenido.plantilla.sidebarcomandante')
+                @elseif (Auth::user()->roles[0]->id == 2)
+                    @include('contenido.plantilla.sidebarjefe')
+                @elseif (Auth::user()->roles[0]->id == 3)
+                    @include('contenido.plantilla.sidebarcadetedisciplina')
+                @else
 
-            @include('contenido.plantilla.sidebar')
+                @endif
+
+            @endif
+
+            
             <!-- Contenido Principal -->
             @yield('contenido')
             <!-- /Fin del contenido principal -->
