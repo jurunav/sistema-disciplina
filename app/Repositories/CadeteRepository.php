@@ -24,7 +24,7 @@ class CadeteRepository
 
         if (!is_null($searchValue)) {
             $query->where(function ($query) use ($searchValue) {
-                $query->where('p.nombre', 'like', $searchValue.'%');
+                $query->where('p.nombre', 'like', '%'.$searchValue.'%');
             });
         }
 

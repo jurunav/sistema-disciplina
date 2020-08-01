@@ -20,7 +20,7 @@ class DisciplinaRepository
 
         if (!is_null($searchValue) && !is_null($criterio)) {
             $query->where(function ($query) use ($criterio, $searchValue) {
-                $query->where('d.'.$criterio, 'like', $searchValue.'%');
+                $query->where('d.'.$criterio, 'like', '%'.$searchValue.'%');
             });
         }
 

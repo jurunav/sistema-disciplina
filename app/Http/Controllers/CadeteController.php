@@ -65,9 +65,8 @@ class CadeteController extends Controller
             $persona->save();
 
             $cadete = new Cadete();
-            $cadete->year_ingreso = $request->year_ingreso;
-            //$cadete->condicion = '1';
             $cadete->persona_id = $persona->id;
+            $cadete->year_ingreso = $request->year_ingreso;
             $cadete->save();
 
             DB::commit();

@@ -15,6 +15,8 @@ class Cadete extends BaseModel
      */
     protected $table = 'cadetes';
 
+    public $timestamps = false;
+    
     /**
      * Cadete constructor.
      * @param array $attributes

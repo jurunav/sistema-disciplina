@@ -97,7 +97,7 @@
 
             @endif
 
-            
+
             <!-- Contenido Principal -->
             @yield('contenido')
             <!-- /Fin del contenido principal -->

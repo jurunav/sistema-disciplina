@@ -118,7 +118,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row" v-if="sancion.categoria === 'Extraordinario' && sancion.puntaje_dia">
+                            <div class="form-group row" v-if="esExtraordinario">
                                 <label class="col-md-3 form-control-label" for="text-input">Cantidad Dia</label>
                                 <div class="col-md-9">
                                     <input type="number" v-model="cant_dia" class="form-control" placeholder="Cantidad dias">
@@ -203,7 +203,8 @@
                 buscar : '',
                 arrayCadete :[],
                 arraySancion :[],
-                arraySancionador :[]
+                arraySancionador :[],
+                esExtraordinario: false
             }
         },
         components: {
@@ -322,7 +323,13 @@
             },
             getSancion(val1){
                 let me = this;
+                me.esExtraordinario = false;
                 me.sancion = val1;
+                if (me.sancion) {
+                    if (me.sancion.categoria === 'Extraordinario' && me.sancion.puntaje_dia !== 0) {
+                        me.esExtraordinario = true;
+                    }
+                }
             },
             getDatosSancionador(val1){
                 let me = this;
