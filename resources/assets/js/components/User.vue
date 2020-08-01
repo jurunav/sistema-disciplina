@@ -89,7 +89,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="name" class="form-control" placeholder="Nombre del cargo">
+                                        <input type="text" v-model="name" class="form-control" placeholder="Nombre del usuario">
                                         
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">password</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Password</label>
                                     <div class="col-md-9">
                                         <input type="password" v-model="password" class="form-control" placeholder="Password del usuario">
                                     </div>

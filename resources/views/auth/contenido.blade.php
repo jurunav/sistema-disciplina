@@ -12,10 +12,18 @@
   <title>SICOCODI</title>
 
   <link href="css/plantilla.css" rel="stylesheet">
-
-</head>
+  
+  </head>
 
 <body class="app flex-row align-items-center">
+<style>
+    body {
+      background-image: url('img/fondo1.png');
+      background-repeat: no-repeat;
+      background-attachment: fixed;  
+      background-size: cover;
+    }
+  </style>
   <div class="container">
     @yield('login')
   </div>

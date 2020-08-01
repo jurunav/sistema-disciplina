@@ -8,7 +8,15 @@
                 <form class="form-horizontal was-validated" method="POST" action="{{ route('login')}}">
                 {{ csrf_field() }}
                     <div class="card-body">
-                    <h1>Acceder</h1>
+                    <style>
+                      img {
+                        display: block;
+                        margin-left: auto;
+                        margin-right: auto;
+                      }
+                    </style>
+                    <img class="center" src="img/logo.png" width="300" height="100">
+                    
                     <p class="text-muted">Control de acceso al sistema</p>
                     <div class="form-group mb-3{{$errors->has('email' ? 'is-invalid' : '')}}">
                         <span class="input-group-addon"><i class="icon-user"></i></span>
