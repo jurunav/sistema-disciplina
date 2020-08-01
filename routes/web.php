@@ -122,6 +122,10 @@ Route::group(['middleware'=>['auth']],function(){
         //
     });
 
+    Route::prefix('api')->group(function () {
+        Route::resource('demeritos', 'Api\DemeritoController');
+        Route::resource('meritos', 'Api\MeritoController');
+    });
 });
 
 //Route::get('/home', 'HomeController@index')->name('home');

@@ -239,7 +239,8 @@
                     method: 'GET',
                     params: {
                         limit: 10,
-                        search:search
+                        search:search,
+                        criterio: 'nombre'
                     }
                 }).then(function (response) {
                     let respuesta = response.data.results;

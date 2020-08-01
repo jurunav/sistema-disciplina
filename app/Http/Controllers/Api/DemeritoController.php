@@ -16,6 +16,7 @@ use App\Services\PersonaService;
 use App\User;
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use Illuminate\Support\Facades\Auth;
 
 class DemeritoController extends Controller
 {
@@ -99,8 +100,10 @@ class DemeritoController extends Controller
     }
 
     public function store(Request $request) {
-        $user = \Auth::user();
-        $user = User::find(2);
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
         $apiRes = new ApiResponse('Demerito');
 
         /**
@@ -159,8 +162,7 @@ class DemeritoController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $user = \Auth::user();
-        $user = User::find(2);
+        $user = Auth::user();
         $apiRes = new ApiResponse('Demerito');
 
         /**
