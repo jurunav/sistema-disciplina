@@ -64,7 +64,7 @@
                                     <a class="nav-link" href="#"><i class="icon-chart"></i> Lista de Franco de Honor</a>
                                 </li>
                                 <li @click="menu=12" class="nav-item">
-                                    <a class="nav-link" href="#"><i class="icon-chart"></i> Reportes</a>
+                                    <a class="nav-link" href="#"><i class="icon-chart"></i> Hoja de Control de Meritos y Demeritos</a>
                                 </li>
                             </ul>
                         </li>

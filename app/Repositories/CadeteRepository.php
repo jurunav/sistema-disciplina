@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Cadete;
 use App\Models\Demerito;
+use App\Models\Disciplina;
+use App\Models\Merito;
 use App\Persona;
 use App\Sancion;
 use Illuminate\Support\Facades\DB;
@@ -113,5 +115,82 @@ class CadeteRepository
             });
         }
         return $query->count();
+    }
+
+    /**
+     * @param Cadete $cadete
+     * @param array $filters
+     * @return \Illuminate\Support\Collection|Cadete[]
+     */
+    public function getAllDemeritoByFilter(Cadete $cadete, $filters = []) {
+        $queryA = Disciplina::from(Disciplina::getFullTableName(). ' as di')
+            ->join(Merito::getFullTableName(). ' as m', 'di.id', '=', 'm.disciplina_id')
+            ->select(
+                'm.id',
+                'm.created_at',
+                DB::raw('NULL AS grupo'),
+                DB::raw('NULL AS inciso'),
+                DB::raw('NULL AS articulo'),
+                'm.num_orden',
+                DB::raw('NULL AS cant_dia'),
+                'di.puntaje AS merito',
+                DB::raw('NULL AS demerito'),
+                'di.nombre AS detalle',
+                DB::raw('NULL AS sancionador')
+            );
+
+        $queryA->where('m.cadete_id', '=', $cadete->id);
+
+        if (array_key_exists('startDate', $filters) && !is_null($filters['startDate']) &&
+            array_key_exists('endDate', $filters) && !is_null($filters['endDate'])) {
+
+            $startDate = $filters['startDate'];
+            $endDate = $filters['endDate'];
+
+            $queryA->where(function ($queryA) use ($startDate, $endDate) {
+                $queryA->whereBetween('m.created_at', [$startDate, $endDate]);
+            });
+
+        }
+
+        $queryB = Sancion::from(Sancion::getFullTableName(). ' as sa')
+            ->join(Demerito::getFullTableName(). ' as d', 'sa.id', '=', 'd.sancion_id')
+            ->leftJoin(Persona::getFullTableName(). ' as p', 'd.sancionador_id', '=', 'p.id')
+            ->select(
+                'd.id',
+                'd.created_at',
+                'sa.grupo AS grupo',
+                'sa.inciso AS inciso',
+                'sa.articulo AS articulo',
+                'd.num_orden',
+                'd.cant_dia AS cant_dia',
+                DB::raw('NULL AS merito'),
+                DB::raw('IF(d.cant_dia = 0, sa.puntaje, (sa.puntaje_dia * d.cant_dia)) AS demerito'),
+                'sa.nombre AS detalle',
+                DB::raw('CONCAT(p.grado, ". ", p.nombre) AS sancionador'))
+            ->union($queryA);
+
+        $queryB->where('d.cadete_id', '=', $cadete->id);
+
+        if (array_key_exists('startDate', $filters) && !is_null($filters['startDate']) &&
+            array_key_exists('endDate', $filters) && !is_null($filters['endDate'])) {
+
+            $startDate = $filters['startDate'];
+            $endDate = $filters['endDate'];
+
+            $queryB->where(function ($queryB) use ($startDate, $endDate) {
+                $queryB->whereBetween('d.created_at', [$startDate, $endDate]);
+            });
+
+        }
+
+        $order = [
+            ['col' => 'created_at', 'dir' => 'asc'],
+        ];
+        foreach($order as $orderItem) {
+            $queryB->orderBy($orderItem['col'], $orderItem['dir']);
+        }
+
+        return $queryB->get();
     }
 }

@@ -69,6 +69,7 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::resource('/rol', 'RolController');
         Route::get('/report/franco-de-honor', 'GenerateReportController@listarFrancoDeHonor');
+        Route::get('/report/control-merito-demerito', 'GenerateReportController@controlMeritoDemerito');
     });
 
     Route::group(['middleware' => ['JefeSeccion']], function () {
@@ -116,6 +117,7 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::resource('/rol', 'RolController');
         Route::get('/report/franco-de-honor', 'GenerateReportController@listarFrancoDeHonor');
+        Route::get('/report/control-merito-demerito', 'GenerateReportController@controlMeritoDemerito');
     });
 
     Route::group(['middleware' => ['CadeteDisciplina']], function () {
