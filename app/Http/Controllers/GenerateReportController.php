@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\CadeteService;
+use App\Services\PersonaService;
 use App\Services\UtilDateService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,14 +21,22 @@ class GenerateReportController extends Controller
     protected $utilDateService;
 
     /**
+     * @var PersonaService $personaService
+     */
+    protected $personaService;
+
+
+    /**
      * GenerateReportController constructor.
      * @param CadeteService $cadeteService
      * @param UtilDateService $utilDateService
+     * @param PersonaService $personaService
      */
-    public function __construct(CadeteService $cadeteService, UtilDateService $utilDateService)
+    public function __construct(CadeteService $cadeteService, UtilDateService $utilDateService, PersonaService $personaService)
     {
         $this->cadeteService = $cadeteService;
         $this->utilDateService = $utilDateService;
+        $this->personaService = $personaService;
     }
 
     public function listarFrancoDeHonor(Request $request) {
@@ -114,6 +123,14 @@ class GenerateReportController extends Controller
         if (array_key_exists('cadeteId', $filters))
             $cadete = $this->cadeteService->getById($filters['cadeteId']);
 
+        $jefeDeSeccion = null;
+        if (array_key_exists('jefeDeSeccionId', $filters))
+            $jefeDeSeccion = $this->personaService->getById($filters['jefeDeSeccionId']);
+
+        $comandanteEscuadron = null;
+        if (array_key_exists('comandanteEscuadronId', $filters))
+            $comandanteEscuadron = $this->personaService->getById($filters['comandanteEscuadronId']);
+
         $meritoDemeritoData = [];
         if (!is_null($startDate) && !is_null($endDate)) {
             $weekList = $this->utilDateService->getWeekRangeDate($startDate, $endDate);
@@ -134,7 +151,9 @@ class GenerateReportController extends Controller
             'report.control-merito-demerito',
             [
                 'meritoDemeritoData'=> $meritoDemeritoData,
-                'cadete'=> $cadete
+                'cadete'=> $cadete,
+                'jefeDeSeccion'=> $jefeDeSeccion,
+                'comandanteEscuadron'=> $comandanteEscuadron
             ]
         )->setPaper('letter', 'landscape');
 

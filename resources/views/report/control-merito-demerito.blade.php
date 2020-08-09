@@ -90,17 +90,17 @@
     ?>
     <div class="row">
         <div class="column">
-            <h3 style="text-align: left">COLEGIO MILITAR DE AVIACION <br> GRUPO CADETES <br> BOLIVIA
-            </h3>
+            <h4 style="text-align: left">COLEGIO MILITAR DE AVIACION <br> GRUPO CADETES <br> BOLIVIA
+            </h4>
         </div>
 
         <div class="column" style="text-align: right">
-            <h3>CURSO: {{$cadete->year_ingreso}} Año <br> GESTION: {{now()->year}} <br> FECHA DE EMISION: {{now()->format('Y-m-d H:i')}}</h3>
+            <h4>CURSO: {{$cadete->year_ingreso}} Año <br> GESTION: {{now()->year}} <br> FECHA DE EMISION: {{now()->format('Y-m-d H:i')}}</h4>
         </div>
     </div>
 
     <div>
-        <h3 style="text-align: center"> HOJA DE CONTROL DE MERITOS Y DEMERITOS</h3>
+        <h4 style="text-align: center"> HOJA DE CONTROL DE MERITOS Y DEMERITOS</h4>
     </div>
     <div>
         <h4>GRADO, APELLIDOS Y NOMBRES: <span style="font-weight: normal;">{{ $cadete->persona->nombre}}</span> </h4>
@@ -222,6 +222,24 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="column">
+            <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $cadete->persona->nombre}}</span> <br> COMUNICADO
+            </h4>
+        </div>
+
+        <div class="column">
+            <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $jefeDeSeccion->nombre}}</span> <br> JEFE DE SECCION DE MERITOS Y DEMERITOS
+            </h4>
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $comandanteEscuadron->nombre}}</span> <br> COMANDANTE ESCUADRON CONDUCTA Y DISCIPLINA
+        </h4>
     </div>
 </body>
 </html>

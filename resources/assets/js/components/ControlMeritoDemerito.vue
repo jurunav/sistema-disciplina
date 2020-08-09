@@ -59,6 +59,38 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Jefe de Sección</label>
+                                            <v-select
+                                                    @search="selectJefeDeSeccion"
+                                                    label="nombre"
+                                                    :options="arrayJefeDeSeccion"
+                                                    placeholder="Buscar Jefe de Seccion..."
+                                                    @input="getDatosJefeDeSeccion"
+                                                    :value="jefeDeSeccion"
+                                            >
+                                            </v-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Comandante Escuadron</label>
+                                            <v-select
+                                                    @search="selectComandanteEscuadron"
+                                                    label="nombre"
+                                                    :options="arrayComandanteEscuadron"
+                                                    placeholder="Buscar Comandante Escuadron..."
+                                                    @input="getDatosComandanteEscuadron"
+                                                    :value="comandanteEscuadron"
+                                            >
+                                            </v-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary" @click="downloadReport()">Descargar Reporte</button>
@@ -83,10 +115,14 @@
         data (){
             return {
                 cadete : {},
+                jefeDeSeccion : {},
+                comandanteEscuadron : {},
                 fecha_inicio : null,
                 fecha_fin : null,
                 errorFormulario : 0,
                 arrayCadete : [],
+                arrayJefeDeSeccion : [],
+                arrayComandanteEscuadron : [],
                 errorMsj : [],
             }
         },
@@ -108,6 +144,8 @@
                     cadeteId: this.cadete.id,
                     startDate: this.fecha_inicio,
                     endDate: this.fecha_fin,
+                    jefeDeSeccionId: this.jefeDeSeccion.id,
+                    comandanteEscuadronId: this.comandanteEscuadron.id
                 };
 
                 location.href = '/report/control-merito-demerito?filters='+JSON.stringify(filters);
@@ -133,11 +171,73 @@
                 let me = this;
                 me.cadete = val1;
             },
+            selectJefeDeSeccion(search){
+                let me=this;
+                axios({
+                    url: '/api/personas',
+                    method: 'GET',
+                    params: {
+                        limit: 10,
+                        search: search,
+                        criterio: 'nombre',
+                        filters: {
+                            withCadeteOnly: true,
+                            finalStage: true,
+                            withEncargadoOnly: true
+                        }
+                    },
+                    paramsSerializer: function (params) {
+                        return qs.stringify(params, {arrayFormat: 'brackets'})
+                    },
+                }).then(function (response) {
+                    let respuesta = response.data.results;
+                    q: search;
+                    me.arrayJefeDeSeccion = respuesta.personas.data;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            getDatosJefeDeSeccion(val1){
+                let me = this;
+                me.jefeDeSeccion = val1;
+            },
+            selectComandanteEscuadron(search){
+                let me=this;
+                axios({
+                    url: '/api/personas',
+                    method: 'GET',
+                    params: {
+                        limit: 10,
+                        search: search,
+                        criterio: 'nombre',
+                        filters: {
+                            withCadeteOnly: true,
+                            finalStage: true,
+                            withEncargadoOnly: true
+                        }
+                    },
+                    paramsSerializer: function (params) {
+                        return qs.stringify(params, {arrayFormat: 'brackets'})
+                    },
+                }).then(function (response) {
+                    let respuesta = response.data.results;
+                    q: search;
+                    me.arrayComandanteEscuadron = respuesta.personas.data;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            getDatosComandanteEscuadron(val1){
+                let me = this;
+                me.comandanteEscuadron = val1;
+            },
             validarFormulario(){
                 this.errorFormulario=0;
                 this.errorMsj =[];
 
-                if (this.salida) this.errorMsj.push("Seleccione un Cadete");
+                if (!this.cadete) this.errorMsj.push("Seleccione un Cadete");
+                if (!this.jefeDeSeccion) this.errorMsj.push("Seleccione un Jefe de Seccion");
+                if (!this.comandanteEscuadron) this.errorMsj.push("Seleccione un Comandante Escuadron");
 
                 if (this.fecha_inicio === null && this.fecha_fin === null)
                     this.errorMsj.push("Seleccione una fecha inicio y una fecha fin");
@@ -148,6 +248,9 @@
             },
         },
         mounted() {
+            this.selectCadete();
+            this.selectJefeDeSeccion();
+            this.selectComandanteEscuadron();
         }
     }
 </script>
