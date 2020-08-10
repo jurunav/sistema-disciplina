@@ -137,10 +137,35 @@ class GenerateReportController extends Controller
 
             foreach ($weekList as $week) {
                 $meritoDemeritoList = $this->cadeteService->getAllDemeritoByFilter($cadete , ['startDate' => $week[0], 'endDate' => $week[1]]);
+
+                /**
+                 * Aqui se verifica si en el rango de fecha no tiene ningun demerito, entonces se añade 3 puntos por franco de honor
+                 */
+                $puntajeMerito = 0;
+                $detalleMerito = null;
+                $tieneFrancoDeHonor = false;
+                if (count($meritoDemeritoList) == 0) {
+                    $puntajeMerito = 3;
+                    $detalleMerito = "Franco de Honor";
+                } else {
+                    foreach ($meritoDemeritoList as $meritoDemerito) {
+                        if (is_null($meritoDemerito->demerito) && (is_null($meritoDemerito->cant_dia) || $meritoDemerito->cant_dia == 0)) {
+                            $tieneFrancoDeHonor = true;
+                        }
+                    }
+
+                    if (!$tieneFrancoDeHonor) {
+                        $puntajeMerito = 3;
+                        $detalleMerito = "Franco de Honor";
+                    }
+                }
+
                 $weekData = [
                     "titulo" => "CIERRE DE LIBRO",
                     "fecha" => Carbon::parse($week[0])->format('Y-m-d'),
-                    "results" => $meritoDemeritoList
+                    "results" => $meritoDemeritoList,
+                    "puntajeMerito" => $puntajeMerito,
+                    "detalleMerito" => $detalleMerito
                 ];
 
                 $meritoDemeritoData[] = $weekData;
@@ -151,9 +176,9 @@ class GenerateReportController extends Controller
             'report.control-merito-demerito',
             [
                 'meritoDemeritoData'=> $meritoDemeritoData,
-                'cadete'=> $cadete,
-                'jefeDeSeccion'=> $jefeDeSeccion,
-                'comandanteEscuadron'=> $comandanteEscuadron
+                'cadete'=> $cadete->toArray(),
+                'jefeDeSeccion'=> $jefeDeSeccion->toArray(),
+                'comandanteEscuadron'=> $comandanteEscuadron->toArray()
             ]
         )->setPaper('letter', 'landscape');
 

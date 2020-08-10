@@ -95,7 +95,7 @@
         </div>
 
         <div class="column" style="text-align: right">
-            <h4>CURSO: {{$cadete->year_ingreso}} Año <br> GESTION: {{now()->year}} <br> FECHA DE EMISION: {{now()->format('Y-m-d H:i')}}</h4>
+            <h4>CURSO: {{$cadete['year_ingreso']}} Año <br> GESTION: {{now()->year}} <br> FECHA DE EMISION: {{now()->format('Y-m-d H:i')}}</h4>
         </div>
     </div>
 
@@ -103,7 +103,7 @@
         <h4 style="text-align: center"> HOJA DE CONTROL DE MERITOS Y DEMERITOS</h4>
     </div>
     <div>
-        <h4>GRADO, APELLIDOS Y NOMBRES: <span style="font-weight: normal;">{{ $cadete->persona->nombre}}</span> </h4>
+        <h4>GRADO, APELLIDOS Y NOMBRES: <span style="font-weight: normal;">{{ $cadete['nombre']}}</span> </h4>
     </div>
     <div>
         <table class="table">
@@ -126,12 +126,30 @@
                 <tr style="background-color: #D8D8D8">
                     <td colspan="2">{{$meritoDemerito['titulo']}}</td>
                     <td colspan="3">{{$meritoDemerito['fecha']}}</td>
-                    <td></td>
+                    <td>{{$meritoDemerito['puntajeMerito']}}</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
+                <?php
+                    $meritoSubTotal += $meritoDemerito['puntajeMerito'];
+                    $francoDeHonorTotal += $meritoDemerito['puntajeMerito'];
+                ?>
+                @if(!is_null($meritoDemerito['detalleMerito']))
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{$meritoDemerito['detalleMerito']}} </td>
+                        <td></td>
+                    </tr>
+                @endif
                 @foreach ($meritoDemerito['results'] as $keyB => $item)
                     <?php
 
@@ -154,10 +172,7 @@
                             $meritoSubTotal += $item->merito;
                         }
 
-                        if (is_null($item->num_orden)
-                            && is_null($item->demerito) && (is_null($item->cant_dia) || $item->cant_dia == 0)) {
-                            $francoDeHonorTotal += $item->merito;
-                        } else if (!is_null($item->num_orden)
+                        if (!is_null($item->num_orden)
                             && is_null($item->demerito) && (is_null($item->cant_dia) || $item->cant_dia == 0)) {
                             $felicitacionTotal += $item->merito;
                         }
@@ -226,19 +241,19 @@
     <br>
     <div class="row">
         <div class="column">
-            <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $cadete->persona->nombre}}</span> <br> COMUNICADO
+            <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $cadete['nombre']}}</span> <br> COMUNICADO
             </h4>
         </div>
 
         <div class="column">
-            <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $jefeDeSeccion->nombre}}</span> <br> JEFE DE SECCION DE MERITOS Y DEMERITOS
+            <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $jefeDeSeccion['nombre']}}</span> <br> JEFE DE SECCION DE MERITOS Y DEMERITOS
             </h4>
         </div>
     </div>
 
     <br>
     <div class="row">
-        <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $comandanteEscuadron->nombre}}</span> <br> COMANDANTE ESCUADRON CONDUCTA Y DISCIPLINA
+        <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $comandanteEscuadron['nombre']}}</span> <br> COMANDANTE ESCUADRON CONDUCTA Y DISCIPLINA
         </h4>
     </div>
 </body>
