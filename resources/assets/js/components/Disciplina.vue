@@ -84,19 +84,8 @@
                         </div>
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Categorías</label>
-                                    <div class="col-md-9">
-                                        <select class="form-control" v-model="categoria.id">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="option in arrayCategoria" :key="option.id" :value="option.id" v-text="option.nombre"></option>
-                                        </select>                                        
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Premios</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Premio</label>
                                     <div class="col-md-9">
                                         <select class="form-control" v-model="premio.id">
                                             <option value="0" disabled>Seleccione</option>
@@ -104,7 +93,16 @@
                                         </select>
                                     </div>
                                 </div>
-
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Categoria</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="categoria.id">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="option in arrayCategoria" :key="option.id" :value="option.id" v-text="option.nombre"></option>
+                                        </select>                                        
+                                    </div>
+                                </div>
+                             
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">

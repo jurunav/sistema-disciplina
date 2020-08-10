@@ -120,10 +120,16 @@
                             <?php
                                 $arrayGrado = ["", "I" , "II", "III", "IV"];
                                 $numeroGrado = $arrayGrado[$cadete->year_ingreso];
+                                $nombreGrado = "";
+                                if ($cadete->grado === "Cdte") {
+                                    $nombreGrado = $cadete->grado. " ". $numeroGrado;
+                                } else {
+                                    $nombreGrado = $cadete->grado;
+                                }
                             ?>
                             <tr style="text-align: center">
                                 <td>{{$key + 1}} </td>
-                                <td>{{$cadete->grado}} {{$numeroGrado}} </td>
+                                <td>{{$nombreGrado}} </td>
                                 <td style="text-align: left">{{$cadete->nombre}} </td>
                             </tr>
                         @endforeach

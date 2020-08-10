@@ -36,8 +36,8 @@ class SancionService extends BaseService
             array_get($data, 'limit', 10),
             array_get($data, 'offset', 0),
             array_get($data, 'order', [['col' => 's.created_at', 'dir' => 'desc']]),
-            array_get($data, 'buscar', null),
-            array_get($data, 'criterio', null)
+            array_get($data, 'search', null),
+            array_get($data, 'criterio', 'nombre')
         );
     }
 

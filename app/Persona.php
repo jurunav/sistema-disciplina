@@ -43,9 +43,27 @@ class Persona extends BaseModel
         return $this->hasOne(Encargado::class, 'persona_id');
     }
 
+    public function getGradoNombre($yearIngreso = 0) {
+        $arrayGrado = ["", "I" , "II", "III", "IV"];
+        $numeroGrado = $arrayGrado[$yearIngreso];
+        $nombreGrado = "";
+        if ($this->grado === "Cdte") {
+            $nombreGrado = $this->grado. " ". $numeroGrado;
+        } else {
+            $nombreGrado = $this->grado;
+        }
+        return $nombreGrado;
+    }
+
     public function toArray()
     {
         $array = parent::attributesToArray();
+
+        $array['nombre'] = $this->getGradoNombre() . " " . $this->nombre;
+        if (!is_null($this->cadete)) {
+            $array['nombre'] = $this->getGradoNombre($this->cadete->year_ingreso) . " " . $this->nombre;
+        }
+
         if (!is_null($this->encargado))
             $array['encargado_id'] = $this->encargado->id;
 

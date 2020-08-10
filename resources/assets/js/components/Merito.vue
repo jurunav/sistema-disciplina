@@ -8,7 +8,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Meritos
+                        <i class="fa fa-align-justify"></i> Méritos
                         <button type="button" @click="abrirModal('merito','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -86,7 +86,7 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Cadetes</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Cadete</label>
                                     <div class="col-md-9">
                                         <v-select
                                                 @search="selectCadete"
@@ -100,7 +100,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Disciplinas</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Mérito</label>
                                     <div class="col-md-9">
                                         <v-select
                                                 @search="selectDisciplina"
@@ -117,7 +117,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Num Orden</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="num_orden" class="form-control" placeholder="Numero de Orden">
+                                        <input type="text" v-model="num_orden" class="form-control" placeholder="Numero de orden del día">
                                     </div>
                                 </div>
 
@@ -395,7 +395,7 @@
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Merito';
+                                this.tituloModal = 'Registrar Mérito';
                                 this.num_orden= '';
                                 this.tipoAccion = 1;
                                 break;
@@ -404,7 +404,7 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Merito';
+                                this.tituloModal='Actualizar Mérito';
                                 this.tipoAccion=2;
                                 this.merito_id=data['id'];
                                 this.disciplina=data['disciplina'];

@@ -90,7 +90,7 @@
                     <div class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Cadetes</label>
+                                <label class="col-md-3 form-control-label" for="text-input">Cadete</label>
                                 <div class="col-md-9">
                                     <v-select
                                             @search="selectCadete"
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Sanciones</label>
+                                <label class="col-md-3 form-control-label" for="text-input">Sancion</label>
                                 <div class="col-md-9">
                                     <v-select
                                             @search="selectSancion"
@@ -264,7 +264,8 @@
                     method: 'GET',
                     params: {
                         limit: 10,
-                        search:search
+                        search: search,
+                        criterio: 'nombre'
                     }
                 }).then(function (response) {
                     let respuesta = response.data.results;
@@ -451,6 +452,7 @@
                 this.tituloModal='';
                 this.cadete= {};
                 this.sancion= {};
+                this.cant_dia= 0,
                 this.sancionador= {};
                 this.num_orden = '';
                 this.errorDemerito=0;

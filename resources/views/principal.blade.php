@@ -17,6 +17,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
+    <style>
+    /* Make the image fully responsive */
+    .carousel-inner img {
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+
     <!-- Icons -->
     <link href="css/plantilla.css" rel="stylesheet">
 
@@ -51,12 +59,12 @@
                             <strong>Notificaciones</strong>
                         </div>
                         <a class="dropdown-item" href="#">
-                            <i class="fa fa-envelope-o"></i> Ingresos
-                            <span class="badge badge-success">3</span>
+                            <i class="fa fa-envelope-o"></i> Méritos
+                            <span class="badge badge-success">2</span>
                         </a>
                         <a class="dropdown-item" href="#">
-                            <i class="fa fa-tasks"></i> Ventas
-                            <span class="badge badge-danger">2</span>
+                            <i class="fa fa-tasks"></i> Deméritos
+                            <span class="badge badge-danger">3</span>
                         </a>
                     </div>
                 </li>

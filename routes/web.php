@@ -67,6 +67,8 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::resource('/user', 'UserController');
 
+        Route::resource('/inicio', 'InicioController');
+
         Route::resource('/rol', 'RolController');
         Route::get('/report/franco-de-honor', 'GenerateReportController@listarFrancoDeHonor');
     });

@@ -38,7 +38,8 @@ class Cadete extends BaseModel
     public function toArray()
     {
         $array = parent::attributesToArray();
-        $array['nombre'] = $this->persona->nombre;
+        $nombreCadete = $this->persona->getGradoNombre($this->year_ingreso) . " " . $this->persona->nombre;
+        $array['nombre'] =  $nombreCadete;
         $array['persona'] = $this->persona;
         return $array;
     }

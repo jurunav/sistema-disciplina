@@ -113,6 +113,9 @@
                                     <div class="col-md-9">
                                         <select v-model="grado" class="form-control">
                                             <option value="Cdte">Cdte</option>
+                                            <option value="Sub Brig">Sub Brig</option>
+                                            <option value="Brig">Brig</option>
+                                            <option value="Brig My">Brig My</option>
                                         </select>
                                     </div>
                                 </div>                               

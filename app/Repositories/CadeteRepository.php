@@ -77,7 +77,7 @@ class CadeteRepository
             $query->where('c.year_ingreso', '=', $filters['yearIngreso']);
         }
 
-        $query->groupBy('c.id', 'p.nombre');
+        $query->groupBy('c.id', 'p.nombre','p.grado','c.year_ingreso');
         $order = [
             ['col' => 'c.year_ingreso', 'dir' => 'desc'],
             ['col' => 'p.nombre', 'dir' => 'asc']
