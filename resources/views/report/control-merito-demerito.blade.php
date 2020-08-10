@@ -73,6 +73,7 @@
             margin-bottom: 1rem;
             background-color: transparent;
             border-collapse: collapse;
+            page-break-before: always;
         }
 
     </style>
