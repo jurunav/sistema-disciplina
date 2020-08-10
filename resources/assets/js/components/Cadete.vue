@@ -59,7 +59,7 @@
                                         </template>
                                     </td>
                                     <td v-text="persona.grado"></td>
-                                    <td v-text="persona.nombre"></td>
+                                    <td v-text="persona.nombre_original"></td>
                                     <td v-text="persona.ci"></td>
                                     <td v-text="persona.cm"></td>
                                     <td v-text="persona.domicilio"></td>
@@ -450,7 +450,7 @@
                                 this.cadete_id=data['id'];
                                 this.persona_id=data['persona_id'];
                                 this.grado = data['grado'];
-                                this.nombre = data['nombre'];
+                                this.nombre = data['nombre_original'];
                                 this.ci = data['ci'];
                                 this.cm = data['cm'];
                                 this.domicilio = data['domicilio'];

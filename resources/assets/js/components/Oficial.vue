@@ -58,7 +58,7 @@
                                         </template>
                                     </td>
                                     <td v-text="encargado.persona.grado"></td>
-                                    <td v-text="encargado.persona.nombre"></td>
+                                    <td v-text="encargado.persona.nombre_original"></td>
                                     <td v-text="encargado.persona.ci"></td>
                                     <td v-text="encargado.persona.cm"></td>
                                     <td v-text="encargado.persona.domicilio"></td>
@@ -454,7 +454,7 @@
                                 this.tipoAccion=2;
                                 this.persona_id=data['id'];
                                 this.grado = data['grado'];
-                                this.nombre = data['nombre'];
+                                this.nombre = data['nombre_original'];
                                 this.ci = data['ci'];
                                 this.cm = data['cm'];
                                 this.domicilio = data['domicilio'];

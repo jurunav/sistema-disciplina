@@ -58,7 +58,7 @@ class Persona extends BaseModel
     public function toArray()
     {
         $array = parent::attributesToArray();
-
+        $array['nombre_original'] = $this->nombre;
         $array['nombre'] = $this->getGradoNombre() . " " . $this->nombre;
         if (!is_null($this->cadete)) {
             $array['nombre'] = $this->getGradoNombre($this->cadete->year_ingreso) . " " . $this->nombre;
