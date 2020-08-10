@@ -7,6 +7,7 @@
                         <li class="nav-title">
                             M E N Ú
                         </li>
+                        @if(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('jefe_seccion'))
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-notebook" ></i> Premios y Sanciones</a>
                             <ul class="nav-dropdown-items">
@@ -24,6 +25,8 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
+                        @if(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('jefe_seccion'))
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people"></i> Personal</a>
                             <ul class="nav-dropdown-items">
@@ -35,6 +38,8 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
+                        @if(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('jefe_seccion') || Auth::user()->hasRole('cadete_conducta'))
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-notebook"></i> Registros</a>
                             <ul class="nav-dropdown-items">
@@ -46,6 +51,8 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
+                        @if(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('jefe_seccion'))
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people"></i> Acceso</a>
                             <ul class="nav-dropdown-items">
@@ -57,6 +64,8 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
+                        @if(Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('jefe_seccion'))
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-pie-chart"></i> Reportes</a>
                             <ul class="nav-dropdown-items">
@@ -68,6 +77,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
                         <li @click="menu=13" class="nav-item">
                             <a class="nav-link" href="#"><i class="icon-book-open"></i> Ayuda <span class="badge badge-danger">PDF</span></a>
                         </li>

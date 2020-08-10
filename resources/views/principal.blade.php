@@ -93,16 +93,7 @@
 
         <div class="app-body">
             @if(Auth::check())
-                @if (Auth::user()->roles[0]->id == 1)
-                    @include('contenido.plantilla.sidebarcomandante')
-                @elseif (Auth::user()->roles[0]->id == 2)
-                    @include('contenido.plantilla.sidebarjefe')
-                @elseif (Auth::user()->roles[0]->id == 3)
-                    @include('contenido.plantilla.sidebarcadetedisciplina')
-                @else
-
-                @endif
-
+                @include('contenido.plantilla.sidebarcomandante')
             @endif
 
 
