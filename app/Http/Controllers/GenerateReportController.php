@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\CadeteService;
+use App\Services\PersonaService;
+use App\Services\UtilDateService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,12 +16,27 @@ class GenerateReportController extends Controller
     protected $cadeteService;
 
     /**
+     * @var UtilDateService $utilDateService
+     */
+    protected $utilDateService;
+
+    /**
+     * @var PersonaService $personaService
+     */
+    protected $personaService;
+
+
+    /**
      * GenerateReportController constructor.
      * @param CadeteService $cadeteService
+     * @param UtilDateService $utilDateService
+     * @param PersonaService $personaService
      */
-    public function __construct(CadeteService $cadeteService)
+    public function __construct(CadeteService $cadeteService, UtilDateService $utilDateService, PersonaService $personaService)
     {
         $this->cadeteService = $cadeteService;
+        $this->utilDateService = $utilDateService;
+        $this->personaService = $personaService;
     }
 
     public function listarFrancoDeHonor(Request $request) {
@@ -89,5 +106,59 @@ class GenerateReportController extends Controller
         $now = new Carbon();
 
         return $pdf->download('franco_de_honor_'.$now->format('Y-m-d-H:i:s').'.pdf');
+    }
+
+    public function controlMeritoDemerito(Request $request) {
+
+        $filters = json_decode($request->input('filters'), true);
+
+        $startDate = null;
+        if (array_key_exists('startDate', $filters) && !is_null($filters['startDate']))
+            $startDate = new Carbon($filters['startDate']);
+        $endDate = null;
+        if (array_key_exists('endDate', $filters) && !is_null($filters['endDate']))
+            $endDate = new Carbon($filters['endDate']);
+
+        $cadete = null;
+        if (array_key_exists('cadeteId', $filters))
+            $cadete = $this->cadeteService->getById($filters['cadeteId']);
+
+        $jefeDeSeccion = null;
+        if (array_key_exists('jefeDeSeccionId', $filters))
+            $jefeDeSeccion = $this->personaService->getById($filters['jefeDeSeccionId']);
+
+        $comandanteEscuadron = null;
+        if (array_key_exists('comandanteEscuadronId', $filters))
+            $comandanteEscuadron = $this->personaService->getById($filters['comandanteEscuadronId']);
+
+        $meritoDemeritoData = [];
+        if (!is_null($startDate) && !is_null($endDate)) {
+            $weekList = $this->utilDateService->getWeekRangeDate($startDate, $endDate);
+
+            foreach ($weekList as $week) {
+                $meritoDemeritoList = $this->cadeteService->getAllDemeritoByFilter($cadete , ['startDate' => $week[0], 'endDate' => $week[1]]);
+                $weekData = [
+                    "titulo" => "CIERRE DE LIBRO",
+                    "fecha" => Carbon::parse($week[0])->format('Y-m-d'),
+                    "results" => $meritoDemeritoList
+                ];
+
+                $meritoDemeritoData[] = $weekData;
+            }
+        }
+
+        $pdf = \PDF::loadView(
+            'report.control-merito-demerito',
+            [
+                'meritoDemeritoData'=> $meritoDemeritoData,
+                'cadete'=> $cadete,
+                'jefeDeSeccion'=> $jefeDeSeccion,
+                'comandanteEscuadron'=> $comandanteEscuadron
+            ]
+        )->setPaper('letter', 'landscape');
+
+        $now = new Carbon();
+
+        return $pdf->download('control_meritos_demeritos_'.$now->format('Y-m-d-H:i:s').'.pdf');
     }
 }

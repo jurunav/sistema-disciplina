@@ -40,7 +40,7 @@
                     <lista-franco-de-honor></lista-franco-de-honor>
                 </template>
                 <template v-if="menu==12" >
-                    <h1>Contenido del menu 12</h1>
+                    <control-merito-demerito></control-merito-demerito>
                 </template>
                 <template v-if="menu==13" >
                     <h1>Contenido del menu 13</h1>
@@ -85,7 +85,7 @@
                     <lista-franco-de-honor></lista-franco-de-honor>
                 </template>
                 <template v-if="menu==12" >
-                    <h1>Contenido del menu 12</h1>
+                    <control-merito-demerito></control-merito-demerito>
                 </template>
                 <template v-if="menu==13" >
                     <h1>Contenido del menu 13</h1>
@@ -102,7 +102,7 @@
                 </template>
                 <template v-if="menu==8" >
                     <demerito></demerito>
-                </template>          
+                </template>
                 <template v-if="menu==13" >
                     <h1>Contenido del menu 13</h1>
                 </template>

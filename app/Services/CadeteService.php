@@ -52,4 +52,8 @@ class CadeteService extends BaseService
         return $this->cadeteRepository->countAllFrancoDeHonor($filters);
     }
 
+    public function getAllDemeritoByFilter(Cadete $cadete, $filters) {
+        return $this->cadeteRepository->getAllDemeritoByFilter($cadete, $filters);
+    }
+
 }

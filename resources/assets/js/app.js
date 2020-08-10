@@ -27,6 +27,7 @@ Vue.component('rol', require('./components/Rol.vue'));
 Vue.component('user', require('./components/User.vue'));
 Vue.component('lista-franco-de-honor', require('./components/ListaFrancoDeHonor.vue'));
 Vue.component('inicio', require('./components/Inicio.vue'));
+Vue.component('control-merito-demerito', require('./components/ControlMeritoDemerito.vue'));
 
 const app = new Vue({
     el: '#app',
