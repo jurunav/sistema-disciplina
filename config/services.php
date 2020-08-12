@@ -34,5 +34,16 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-
+    'salidas' => [
+        'franco_de_honor' => env('PUNTAJE_FRANCO_DE_HONOR', 0),
+        'franco_domingo' => [
+            'min' => env('PUNTAJE_FRANCO_DOMINGO_MIN', 1),
+            'max' => env('PUNTAJE_FRANCO_DOMINGO_MAX', 3),
+        ],
+        'franco_medio_domingo' => [
+            'min' => env('PUNTAJE_FRANCO_MEDIO_DOMINGO_MIN', 4),
+            'max' => env('PUNTAJE_FRANCO_MEDIO_DOMINGO_MAX', 5),
+        ],
+        'sin_salida' => env('PUNTAJE_SIN_SALIDA', 6),
+    ],
 ];

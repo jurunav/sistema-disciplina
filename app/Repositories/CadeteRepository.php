@@ -47,39 +47,50 @@ class CadeteRepository
      */
     public function getAllFrancoDeHonor($filters = []) {
         $query = Cadete::from(Cadete::getFullTableName(). ' as c')
-            ->join(Persona::getFullTableName(). ' as p', 'c.persona_id', '=', 'p.id')
-            ->leftJoin(Demerito::getFullTableName(). ' as d', 'd.cadete_id', '=', 'c.id')
-            ->leftJoin(Sancion::getFullTableName(). ' as s', 'd.sancion_id', '=', 's.id')
-            ->select(
-                'c.id',
-                'p.nombre',
-                'p.grado',
-                'c.year_ingreso',
-                DB::raw('COUNT(s.id) AS total_sanciones'))
-            ->distinct();
+            ->join(Persona::getFullTableName(). ' as p', 'c.persona_id', '=', 'p.id');
 
         if (array_key_exists('startDate', $filters) && !is_null($filters['startDate']) &&
             array_key_exists('endDate', $filters) && !is_null($filters['endDate'])) {
-
-            $startDate = $filters['startDate'];
-            $endDate = $filters['endDate'];
-            $puntajeSalida = $filters['puntajeSalida'];
-            $query->where(function($query) use ($startDate, $endDate, $puntajeSalida) {
-                $ofScore = ($puntajeSalida == 0) ? "IS NULL" : "<= ".$puntajeSalida;
-                $query->whereRaw("(SELECT SUM(sa.puntaje + (sa.puntaje_dia * de.cant_dia)) FROM ".
-                    Demerito::getFullTableName()." AS de  INNER JOIN ".Sancion::getFullTableName().
-                    " AS sa ON de.sancion_id = sa.id WHERE de.cadete_id = c.id AND (de.created_at > '".
-                    $startDate."' AND de.created_at < '".$endDate."')) ".$ofScore);
-            });
+            $query->leftJoin(DB::raw("(select * from".Demerito::getFullTableName()."
+                                where (created_at > '".$filters['startDate']."' AND created_at < '".$filters['endDate']."')) as d"),
+                'd.cadete_id', '=', 'c.id');
+        } else {
+            $query->leftJoin(Demerito::getFullTableName(). 'as d', 'd.cadete_id', '=', 'c.id');
         }
-        if (array_key_exists('yearIngreso', $filters)
-            && !is_null($filters['yearIngreso'])
-            && $filters['yearIngreso'] != 'all') {
 
-            $query->where('c.year_ingreso', '=', $filters['yearIngreso']);
+        $query->leftJoin(Sancion::getFullTableName(). ' as s', 'd.sancion_id', '=', 's.id');
+
+
+        $query->select(
+            'c.id',
+            'p.nombre',
+            'p.grado',
+            'c.year_ingreso',
+            DB::raw('COUNT(s.id) as total_sanciones'))
+            ->distinct();
+
+        if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
+            $query->where('d.num_orden', 'is not null');
+        }
+
+        if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
+            $query->where('s.nombre', 'like', '% reposo %');
         }
 
         $query->groupBy('c.id', 'p.nombre','p.grado','c.year_ingreso');
+
+        if (array_key_exists('puntaje', $filters)) {
+            $withScore  = "0=0";
+            if (is_array($filters['puntaje']) && count($filters['puntaje']) > 0) {
+                $withScore = "puntaje_total >= ". $filters['puntaje']['min'] ." AND puntaje_total <= ". $filters['puntaje']['max'];
+            } else if (array_key_exists('code', $filters) && $filters['code'] == 'franco_de_honor') {
+                $withScore = "puntaje_total is null";
+            } else if(array_key_exists('code', $filters) && $filters['code'] == 'sin_salida') {
+                $withScore = "puntaje_total >= ". $filters['puntaje'];
+            }
+            $query->havingRaw($withScore);
+        }
+
         $order = [
             ['col' => 'c.year_ingreso', 'dir' => 'desc'],
             ['col' => 'p.nombre', 'dir' => 'asc']

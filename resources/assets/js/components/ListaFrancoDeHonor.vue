@@ -20,26 +20,20 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label">Salida</label>
-                                            <select class="form-control" v-model="salida">
-                                                <option value="franco_de_honor" selected>Franco de Honor (Sábado y domingo)</option>
-                                                <option value="franco_domingo">Franco domingo</option>
-                                                <option value="franco_medio_domingo">½ domingo</option>
-                                            </select>
-                                        </div>
+                                    <div class="col-md-12">
+                                        <label class="form-control-label">Salida</label>
                                     </div>
                                 </div>
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-md-6" v-if="salida && salida === 'franco_de_honor'">
-                                                <!--VALIDAR CUANDO SE CAMBIE EL SELECT DE SALIDA SI NO ES DE HONOR MOSTRAR SOLO DOMINGO-->
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">Sabado</label>
                                                     <input type="datetime-local" v-model="fecha_salida.sabado_inicio" class="form-control">
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">hasta</label>
                                                     <input type="datetime-local" v-model="fecha_salida.sabado_fin" class="form-control">
@@ -50,6 +44,8 @@
                                                     <label class="form-control-label">Domingo</label>
                                                     <input type="datetime-local" v-model="fecha_salida.domingo_inicio" class="form-control">
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">hasta</label>
                                                     <input type="datetime-local" v-model="fecha_salida.domingo_fin" class="form-control">
@@ -82,20 +78,6 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label">Año Militar</label>
-                                            <select class="form-control" v-model="year_ingreso">
-                                                <option value="all" selected>Todos</option>
-                                                <option value="1">Primer Año</option>
-                                                <option value="2">Segundo Año</option>
-                                                <option value="3">Tercer Año</option>
-                                                <option value="4">Cuarto Año</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary" @click="downloadReport()">Descargar Reporte</button>
@@ -119,7 +101,6 @@
     export default {
         data (){
             return {
-                salida : 'franco_de_honor',
                 fecha_salida : {
                     sabado_inicio : null,
                     sabado_fin : null,
@@ -128,7 +109,6 @@
                 },
                 fecha_inicio : null,
                 fecha_fin : null,
-                year_ingreso : 'all',
                 errorFormulario : 0,
                 errorMsj : [],
             }
@@ -146,11 +126,9 @@
                 }
 
                 var filters = {
-                    salida: this.salida,
                     fechaSalida: this.fecha_salida,
                     startDate: this.fecha_inicio,
                     endDate: this.fecha_fin,
-                    yearIngreso: this.year_ingreso
                 };
 
                 location.href = '/report/franco-de-honor?filters='+JSON.stringify(filters);
@@ -159,7 +137,7 @@
                 this.errorFormulario=0;
                 this.errorMsj =[];
 
-                if (this.salida === "franco_de_honor" && (this.fecha_salida.sabado_inicio === null && this.fecha_salida.sabado_fin === null))
+                if (this.fecha_salida.sabado_inicio === null && this.fecha_salida.sabado_fin === null)
                     this.errorMsj.push("Seleccione una fecha y hora de salida para dia Sabado");
 
                 if (this.fecha_salida.domingo_inicio === null && this.fecha_salida.domingo_fin === null)
