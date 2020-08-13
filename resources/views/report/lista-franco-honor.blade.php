@@ -16,8 +16,8 @@
         }
         .table {
             display: table;
-            width: auto;
-            max-width: 100%;
+            width: 100%;
+            /*max-width: 100%;*/
             margin-bottom: 1rem;
             background-color: transparent;
             border-collapse: collapse;
@@ -87,56 +87,72 @@
     <div>
         <h3 style="text-align: center">LISTA DE FRANCO Y ARRESTOS DE LAS DAMAS Y CABALLEROS <br> CADETES DEL COLEGIO MILITAR DE AVIACION</h3>
     </div>
-    <div style="width: 50%;margin: 0 auto">
-        <h3 style="text-align: left">{{$titular}}
-        </h3>
-    </div>
-    <div>
-        @foreach ($groupCadeteList as $key => $cadeteList)
-            <div>
-                @if($key == 4)
-                    <h3><u>CUARTO AÑO MILITAR</u></h3>
+    @foreach($francoYArrestoList as $key => $francoyArresto)
+        <?php
+        $arrayTitular = ["I" , "II", "III", "IV", "V", "VI"];
+        ?>
+        <div style="page-break-inside: avoid;">
+            <h3>
+                <span style="padding-right: 2em;">{{$arrayTitular[$key]."."}}</span>{{$francoyArresto['config']['titular']}}
+            </h3>
+        </div>
+        <div>
+            @foreach ($francoyArresto['groupCadeteList'] as $keyB => $cadeteList)
+                <div>
+                    @if($keyB == 4)
+                        <h3><u>CUARTO AÑO MILITAR</u></h3>
+                    @endif
+                    @if($keyB == 3)
+                        <h3><u>TERCER AÑO MILITAR</u></h3>
+                    @endif
+                    @if($keyB == 2)
+                        <h3><u>SEGUNDO AÑO MILITAR</u></h3>
+                    @endif
+                    @if($keyB == 1)
+                        <h3><u>PRIMER AÑO MILITAR</u></h3>
+                    @endif
+                </div>
+                <table class="table">
+                    {{--<colgroup>--}}
+                        {{--<col width="15%">--}}
+                        {{--<col width="15%">--}}
+                        {{--<col width="75%">--}}
+                    {{--</colgroup>--}}
+                    <thead>
+                        <tr>
+                            <th width="15%">Nº Cdte </th>
+                            <th width="15%">GRADO </th>
+                            <th width="70%">APELLIDO Y NOMBRE </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            @foreach($cadeteList as $keyC => $cadete)
+                                <?php
+                                    $arrayGrado = ["", "I" , "II", "III", "IV"];
+                                    $numeroGrado = $arrayGrado[$cadete->year_ingreso];
+                                    $nombreGrado = "";
+                                    if ($cadete->grado === "Cdte") {
+                                        $nombreGrado = $cadete->grado. " ". $numeroGrado;
+                                    } else {
+                                        $nombreGrado = $cadete->grado;
+                                    }
+                                ?>
+                                <tr>
+                                    <td>{{$keyC + 1}} </td>
+                                    <td>{{$nombreGrado}} </td>
+                                    <td style="text-align: left">{{$cadete->nombre}} </td>
+                                </tr>
+                            @endforeach
+                    </tbody>
+                </table>
+                @if(count($francoyArresto['groupCadeteList']) > 1)
+                    <strong>TOTAL CADETES : {{count($cadeteList)}}</strong>
                 @endif
-                @if($key == 3)
-                    <h3><u>TERCER AÑO MILITAR</u></h3>
-                @endif
-                @if($key == 2)
-                    <h3><u>SEGUNDO AÑO MILITAR</u></h3>
-                @endif
-                @if($key == 1)
-                    <h3><u>PRIMER AÑO MILITAR</u></h3>
-                @endif
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nº <br>GRAL</th>
-                        <th>GRADO </th>
-                        <th>APELLIDO Y NOMBRE </th>
-                    </tr>
-                </thead>
-                <tbody>
-                        @foreach($cadeteList as $key => $cadete)
-                            <?php
-                                $arrayGrado = ["", "I" , "II", "III", "IV"];
-                                $numeroGrado = $arrayGrado[$cadete->year_ingreso];
-                                $nombreGrado = "";
-                                if ($cadete->grado === "Cdte") {
-                                    $nombreGrado = $cadete->grado. " ". $numeroGrado;
-                                } else {
-                                    $nombreGrado = $cadete->grado;
-                                }
-                            ?>
-                            <tr style="text-align: center">
-                                <td>{{$key + 1}} </td>
-                                <td>{{$nombreGrado}} </td>
-                                <td style="text-align: left">{{$cadete->nombre}} </td>
-                            </tr>
-                        @endforeach
-                </tbody>
-                <strong>TOTAL CADETES : {{count($cadeteList)}}</strong>
-            </table>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
+        <div>
+            <strong style="color: red">TOTAL {{ $francoyArresto['config']['nombre'].": " .$francoyArresto['totalCadetes']}}</strong>
+        </div>
+    @endforeach
 </body>
 </html>

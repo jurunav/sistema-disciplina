@@ -122,20 +122,25 @@ class CadeteService extends BaseService
         $cadeteList = $this->getAllFrancoDeHonor($filters);
 
         $groupCadeteList = [];
+        $totalCadetes = 0;
         if (array_key_exists('code', $config)
             && in_array($config['code'], ['sancion_orden_dia', 'reposo'])) {
-            $groupCadeteList[] = $cadeteList;
+            if ($cadeteList->count() > 0) {
+                $groupCadeteList[] = $cadeteList;
+            }
         } else {
             foreach ($cadeteList as $cadete) {
                 if (!array_key_exists($cadete->year_ingreso, $groupCadeteList))
                     $groupCadeteList[$cadete->year_ingreso] = [];
                 $groupCadeteList[$cadete->year_ingreso][] = $cadete;
+                $totalCadetes++;
             }
         }
 
         $resultData = [
             "config" => $config,
-            "groupCadeteList" => $groupCadeteList
+            "groupCadeteList" => $groupCadeteList,
+            "totalCadetes" => $totalCadetes
         ];
 
 

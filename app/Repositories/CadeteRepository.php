@@ -51,8 +51,7 @@ class CadeteRepository
 
         if (array_key_exists('startDate', $filters) && !is_null($filters['startDate']) &&
             array_key_exists('endDate', $filters) && !is_null($filters['endDate'])) {
-            $query->leftJoin(DB::raw("(select * from".Demerito::getFullTableName()."
-                                where (created_at > '".$filters['startDate']."' AND created_at < '".$filters['endDate']."')) as d"),
+            $query->leftJoin(DB::raw("(select * from ".Demerito::getFullTableName()." where (created_at > '".$filters['startDate']."' AND created_at < '".$filters['endDate']."')) as d"),
                 'd.cadete_id', '=', 'c.id');
         } else {
             $query->leftJoin(Demerito::getFullTableName(). 'as d', 'd.cadete_id', '=', 'c.id');
@@ -66,7 +65,8 @@ class CadeteRepository
             'p.nombre',
             'p.grado',
             'c.year_ingreso',
-            DB::raw('COUNT(s.id) as total_sanciones'))
+            DB::raw('COUNT(s.id) as total_sanciones'),
+            DB::raw('SUM(s.puntaje + (s.puntaje_dia * d.cant_dia)) AS puntaje_total'))
             ->distinct();
 
         if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {

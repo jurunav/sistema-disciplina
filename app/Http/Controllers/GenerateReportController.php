@@ -44,14 +44,16 @@ class GenerateReportController extends Controller
 
         $francoYArrestoConfig = [
             [
+                "nombre" => "FRANCO DE HONOR",
                 "code" => "franco_de_honor",
-                "titular" => "I. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN SALIDA DE FRANCO",
+                "titular" => "RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN SALIDA DE FRANCO",
                 "puntaje" => config('services.salidas.franco_de_honor'),
                 "type" => "salida"
             ],
             [
+                "nombre" => "FRANCO",
                 "code" => "franco_domingo",
-                "titular" => "II. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN SALIDA DE FRANCO",
+                "titular" => "RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN SALIDA DE FRANCO",
                 "puntaje" => [
                     "min" => config('services.salidas.franco_domingo.min'),
                     "max" => config('services.salidas.franco_domingo.max')
@@ -59,8 +61,9 @@ class GenerateReportController extends Controller
                 "type" => "salida"
             ],
             [
+                "nombre" => "1/2 DOMINGO",
                 "code" => "franco_medio_domingo",
-                "titular" => "III. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN SALIDA DE FRANCO",
+                "titular" => "RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN SALIDA DE FRANCO",
                 "puntaje" => [
                     "min" => config('services.salidas.franco_medio_domingo.min'),
                     "max" => config('services.salidas.franco_medio_domingo.max')
@@ -68,19 +71,22 @@ class GenerateReportController extends Controller
                 "type" => "salida"
             ],
             [
+                "nombre" => "DOMINGO",
                 "code" => "sin_salida",
-                "titular" => "IV. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN UN DOMINGO DE ARRESTO",
+                "titular" => "RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE TIENEN UN DOMINGO DE ARRESTO",
                 "puntaje" => config('services.salidas.sin_salida'),
                 "type" => "arresto"
             ],
             [
+                "nombre" => "CADETES SANCIONADOS",
                 "code" => "sancion_orden_dia",
-                "titular" => "V. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES SANCIONADOS POR ORDEN DEL DÍA",
+                "titular" => "RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES SANCIONADOS POR ORDEN DEL DÍA",
                 "type" => "arresto"
             ],
             [
+                "nombre" => "CADETES EN REPOSO",
                 "code" => "reposo",
-                "titular" => "VI. RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE INGRESARON A REPOSO DURANTE LA SEMANA",
+                "titular" => "RELACION NOMINAL DE LAS DAMAS Y CABALLEROS CADETES QUE INGRESARON A REPOSO DURANTE LA SEMANA",
                 "type" => "arresto"
             ],
         ];
