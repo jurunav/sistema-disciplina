@@ -91,33 +91,28 @@
         <?php
         $arrayTitular = ["I" , "II", "III", "IV", "V", "VI"];
         ?>
-        <div style="page-break-inside: avoid;">
-            <h3>
+        <div>
+            <h4>
                 <span style="padding-right: 2em;">{{$arrayTitular[$key]."."}}</span>{{$francoyArresto['config']['titular']}}
-            </h3>
+            </h4>
         </div>
         <div>
             @foreach ($francoyArresto['groupCadeteList'] as $keyB => $cadeteList)
                 <div>
                     @if($keyB == 4)
-                        <h3><u>CUARTO AÑO MILITAR</u></h3>
+                        <h4><u>CUARTO AÑO MILITAR</u></h4>
                     @endif
                     @if($keyB == 3)
-                        <h3><u>TERCER AÑO MILITAR</u></h3>
+                        <h4><u>TERCER AÑO MILITAR</u></h4>
                     @endif
                     @if($keyB == 2)
-                        <h3><u>SEGUNDO AÑO MILITAR</u></h3>
+                        <h4><u>SEGUNDO AÑO MILITAR</u></h4>
                     @endif
                     @if($keyB == 1)
-                        <h3><u>PRIMER AÑO MILITAR</u></h3>
+                        <h4><u>PRIMER AÑO MILITAR</u></h4>
                     @endif
                 </div>
                 <table class="table">
-                    {{--<colgroup>--}}
-                        {{--<col width="15%">--}}
-                        {{--<col width="15%">--}}
-                        {{--<col width="75%">--}}
-                    {{--</colgroup>--}}
                     <thead>
                         <tr>
                             <th width="15%">Nº Cdte </th>
