@@ -92,11 +92,12 @@
         $arrayTitular = ["I" , "II", "III", "IV", "V", "VI"];
         ?>
         <div>
-            <h4>
-                <span style="padding-right: 2em;">{{$arrayTitular[$key]."."}}</span>{{$francoyArresto['config']['titular']}}
-            </h4>
-        </div>
-        <div>
+            <div>
+                <h4>
+                    <span style="padding-right: 2em;">{{$arrayTitular[$key]."."}}</span>{{$francoyArresto['config']['titular']}}
+                </h4>
+            </div>
+        
             @foreach ($francoyArresto['groupCadeteList'] as $keyB => $cadeteList)
                 <div>
                     @if($keyB == 4)
@@ -144,9 +145,9 @@
                     <strong>TOTAL CADETES : {{count($cadeteList)}}</strong>
                 @endif
             @endforeach
-        </div>
-        <div>
-            <strong style="color: red">TOTAL {{ $francoyArresto['config']['nombre'].": " .$francoyArresto['totalCadetes']}}</strong>
+            <div>
+                <strong style="color: red">TOTAL {{ $francoyArresto['config']['nombre'].": " .$francoyArresto['totalCadetes']}}</strong>
+            </div>
         </div>
     @endforeach
 </body>

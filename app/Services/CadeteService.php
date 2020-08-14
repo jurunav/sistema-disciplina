@@ -68,7 +68,7 @@ class CadeteService extends BaseService
             if (array_key_exists('fechaSalida', $filters) && !is_null($filters['fechaSalida'])) {
                 $fechaSalida = $filters['fechaSalida'];
 
-                if ((array_key_exists('salida', $filters) && $filters['salida'] === "franco_de_honor")) {
+                if ((array_key_exists('code', $config) && $config['code'] === "franco_de_honor")) {
                     if (array_key_exists('sabado_inicio', $fechaSalida) && !is_null($fechaSalida['sabado_inicio'])
                         && array_key_exists('sabado_fin', $fechaSalida) && !is_null($fechaSalida['sabado_fin'])
                     ) {
@@ -82,10 +82,7 @@ class CadeteService extends BaseService
                     $titular .= " Y ";
                 }
 
-                if (array_key_exists('salida', $filters) && $filters['salida'] === "franco_domingo") {
-                }
-
-                if (array_key_exists('salida', $filters) && $filters['salida'] === "franco_medio_domingo") {
+                if (array_key_exists('code', $config) && $config['code'] === "franco_medio_domingo") {
                     $titular .= " MEDIO DOMINGO ";
                 }
 
