@@ -21,6 +21,14 @@
             background-color: transparent;
             border-collapse: collapse;
         }
+        .table-column {
+            display: table;
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+            border-collapse: collapse;
+            /*page-break-inside: avoid;*/
+        }
         thead {
             display: table-header-group;
             vertical-align: middle;
@@ -73,7 +81,6 @@
             margin-bottom: 1rem;
             background-color: transparent;
             border-collapse: collapse;
-            page-break-before: always;
         }
 
     </style>
@@ -123,60 +130,31 @@
                 </tr>
             </thead>
             <tbody>
+            <?php
+            $puntajeFrancoDeHonor = 3 ;
+            $demeritoSubTotalPorSemana = 0;
+            ?>
             @foreach ($meritoDemeritoData as $key => $meritoDemerito)
                 <tr style="background-color: #D8D8D8">
                     <td colspan="2">{{$meritoDemerito['titulo']}}</td>
                     <td colspan="3">{{$meritoDemerito['fecha']}}</td>
-                    <td>{{$meritoDemerito['puntajeMerito']}}</td>
+                    <td>{{$puntajeFrancoDeHonor}}</td>
+                    <td>{{$demeritoSubTotalPorSemana}}</td>
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{($puntajeFrancoDeHonor == 3) ? 'FRANCO DE HONOR' : ''}}</td>
                     <td></td>
                 </tr>
                 <?php
-                    $meritoSubTotal += $meritoDemerito['puntajeMerito'];
-                    $francoDeHonorTotal += $meritoDemerito['puntajeMerito'];
+                    $demeritoSubTotalPorSemana = 0;
                 ?>
-                @if(!is_null($meritoDemerito['detalleMerito']))
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{$meritoDemerito['detalleMerito']}} </td>
-                        <td></td>
-                    </tr>
-                @endif
                 @foreach ($meritoDemerito['results'] as $keyB => $item)
                     <?php
 
                         if (is_null($item->merito)) {
-                            $demeritoSubTotal += $item->demerito;
+//                            $demeritoSubTotal += $item->demerito;
+                            $demeritoSubTotalPorSemana += $item->demerito;
                         }
 
-                        if (is_null($item->num_orden)
-                            && is_null($item->merito) && (is_null($item->cant_dia) || $item->cant_dia == 0)) {
-                            $demeritoTotal += $item->demerito;
-                        } else if (!is_null($item->num_orden)
-                            && is_null($item->merito) && (is_null($item->cant_dia) || $item->cant_dia == 0)) {
-                            $sancionDisciplinariaTotal += $item->demerito;
-                        } else if (is_null($item->num_orden)
-                            && is_null($item->merito) && (!is_null($item->cant_dia) && $item->cant_dia > 0)) {
-                            $reposoTotal += $item->demerito;
-                        }
-
-                        if (is_null($item->demerito)) {
-                            $meritoSubTotal += $item->merito;
-                        }
-
-                        if (!is_null($item->num_orden)
-                            && is_null($item->demerito) && (is_null($item->cant_dia) || $item->cant_dia == 0)) {
-                            $felicitacionTotal += $item->merito;
-                        }
                     ?>
                     <tr>
                         <td>{{$keyB + 1}} </td>
@@ -191,6 +169,16 @@
                         <td>{{strtoupper($item->sancionador)}} </td>
                     </tr>
                 @endforeach
+                <?php
+                $demeritoSubTotal += $demeritoSubTotalPorSemana;
+                $meritoSubTotal += $puntajeFrancoDeHonor;
+
+                    if ($demeritoSubTotalPorSemana == 0) {
+                        $puntajeFrancoDeHonor = 3 ;
+                    } else if ($demeritoSubTotalPorSemana > 0) {
+                        $puntajeFrancoDeHonor = 0 ;
+                    }
+                ?>
             @endforeach
             <tr>
                 <td style="border: none;" colspan="4"></td>
@@ -201,31 +189,114 @@
             </tr>
             </tbody>
         </table>
+    </div>
         <?php
-            $total = $francoDeHonorTotal + $felicitacionTotal - $reposoTotal - $sancionDisciplinariaTotal - $demeritoTotal;
+        $reposoSubTotal = 0;
+        $felicitacionSubTotal = 0;
+        $ordenSancionSubTotal = 0;
         ?>
-        <div>
+        <div style="page-break-inside: avoid;">
+            <table class="table-column" style="width: 50%">
+                <thead>
+                    <tr style="background-color: #BFBFBF">
+                        <th colspan="3">DIAS DE REPOSO</th>
+                    </tr>
+                    <tr style="background-color: #D8D8D8">
+                        <th width="40%">FECHA</th>
+                        <th width="40%">CANTIDAD DE DIAS</th>
+                        <th width="20%">DEMERITOS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach ($porReposoList as $key => $porReposo)
+                    <?php
+                        if (is_null($porReposo->merito) && !is_null($porReposo->cant_dia)) {
+                            $reposoSubTotal += $porReposo->demerito;
+                        }
+                    ?>
+                    <tr>
+                        <td>{{$porReposo->created_at->format('Y-m-d')}}</td>
+                        <td>{{$porReposo->cant_dia}}</td>
+                        <td>{{$porReposo->demerito}}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td style="border: none;" colspan="1"></td>
+                    <td style="background-color: #D8D8D8"><strong>SUBTOTAL</strong></td>
+                    <td style="background-color: #D8D8D8">{{$reposoSubTotal}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="page-break-inside: avoid;">
+            <table class="table-column" style="width: 70%">
+                <thead>
+                    <tr style="background-color: #BFBFBF">
+                        <th colspan="5">FELICITACIONES Y SANCIONES POR ORDEN DEL DÍA</th>
+                    </tr>
+                    <tr style="background-color: #D8D8D8">
+                        <th width="35%">ORDEN DEL DIA</th>
+                        <th width="15%">FECHA</th>
+                        <th width="20%">NRO.</th>
+                        <th width="15%">MERITOS</th>
+                        <th width="15%">DEMERITOS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($porNumOrdenList as $key => $porNumOrden)
+                        <?php
+
+                            if (!is_null($porNumOrden->num_orden) && is_null($porNumOrden->demerito)) {
+                                $felicitacionSubTotal += $porNumOrden->merito;
+                            }
+
+                            if (!is_null($porNumOrden->num_orden) && is_null($porNumOrden->merito)) {
+                                $ordenSancionSubTotal += $porNumOrden->demerito;
+                            }
+                        ?>
+                        <tr>
+                            <td>{{$porNumOrden->detalle}}</td>
+                            <td>{{$porNumOrden->created_at->format('Y-m-d')}}</td>
+                            <td>{{$porNumOrden->num_orden}}</td>
+                            <td>{{$porNumOrden->merito}}</td>
+                            <td>{{$porNumOrden->demerito}}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td style="border: none;" colspan="2"></td>
+                        <td style="background-color: #D8D8D8"><strong>SUBTOTAL</strong></td>
+                        <td style="background-color: #D8D8D8">{{$felicitacionSubTotal}}</td>
+                        <td style="background-color: #D8D8D8">{{$ordenSancionSubTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php
+            $total = $meritoSubTotal + $felicitacionSubTotal - $reposoSubTotal - $ordenSancionSubTotal - $demeritoSubTotal;
+        ?>
+        <div style="page-break-inside: avoid;">
             <table class="table-total">
                 <tbody>
                     <tr>
                         <th style="text-align: left;padding: 0 10px 0 0;" colspan="1" scope="row">DEMERITOS</th>
-                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$demeritoTotal}}</td>
+                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$demeritoSubTotal}}</td>
                     </tr>
                     <tr>
                         <th style="text-align: left;padding: 0 10px 0 0;" colspan="1" scope="row">SANCIONES DISCIPLINARIAS</th>
-                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$sancionDisciplinariaTotal}}</td>
+                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$ordenSancionSubTotal}}</td>
                     </tr>
                     <tr>
                         <th style="text-align: left;padding: 0 10px 0 0;" scope="row">REPOSOS</th>
-                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$reposoTotal}}</td>
+                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$reposoSubTotal}}</td>
                     </tr>
                     <tr>
                         <th style="text-align: left;padding: 0 10px 0 0;" scope="row">FELICITACIONES</th>
-                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$felicitacionTotal}}</td>
+                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$felicitacionSubTotal}}</td>
                     </tr>
                     <tr>
                         <th style="text-align: left;padding: 0 10px 0 0;" scope="row">FRANCOS DE HONOR</th>
-                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$francoDeHonorTotal}}</td>
+                        <td style="text-align: center;padding: 0 10px 0 10px;">{{$meritoSubTotal}}</td>
                     </tr>
                     <tr>
                         <th style="text-align: left;padding: 0 10px 0 0;background-color: #D8D8D8" scope="row">TOTAL</th>
@@ -238,7 +309,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
     <br>
     <div class="row">
         <div class="column">

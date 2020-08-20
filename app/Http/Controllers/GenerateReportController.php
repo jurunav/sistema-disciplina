@@ -133,51 +133,74 @@ class GenerateReportController extends Controller
         if (array_key_exists('comandanteEscuadronId', $filters))
             $comandanteEscuadron = $this->personaService->getById($filters['comandanteEscuadronId']);
 
-        $meritoDemeritoData = [];
+        $demeritoData = [];
+        $porNumOrdenList = [];
+        $porReposoList = [];
         if (!is_null($startDate) && !is_null($endDate)) {
             $weekList = $this->utilDateService->getWeekRangeDate($startDate, $endDate);
-
-            foreach ($weekList as $week) {
+            foreach ($weekList as $keyWeek => $week) {
                 $meritoDemeritoList = $this->cadeteService->getAllDemeritoByFilter($cadete , ['startDate' => $week[0], 'endDate' => $week[1]]);
-
-                /**
-                 * Aqui se verifica si en el rango de fecha no tiene ningun demerito, entonces se añade 3 puntos por franco de honor
-                 */
-                $puntajeMerito = 0;
-                $detalleMerito = null;
-                $tieneFrancoDeHonor = false;
-                if (count($meritoDemeritoList) == 0) {
-                    $puntajeMerito = 3;
-                    $detalleMerito = "Franco de Honor";
-                } else {
-                    foreach ($meritoDemeritoList as $meritoDemerito) {
-                        if (is_null($meritoDemerito->demerito) && (is_null($meritoDemerito->cant_dia) || $meritoDemerito->cant_dia == 0)) {
-                            $tieneFrancoDeHonor = true;
-                        }
+                $demeritoList = [];
+                foreach ($meritoDemeritoList as $key => $meritoDemerito) {
+                    if ($meritoDemerito->por_reposo == false
+                        && is_null($meritoDemerito->num_orden)) {
+                        $demeritoList[] = $meritoDemerito;
+                        $meritoDemeritoList->forget($key);
+                    } else if (!is_null($meritoDemerito->num_orden)) {
+                        $porNumOrdenList[] = $meritoDemerito;
+                        $meritoDemeritoList->forget($key);
+                    } else if ($meritoDemerito->por_reposo) {
+                        $porReposoListList[] = $meritoDemerito;
+                        $meritoDemeritoList->forget($key);
                     }
+                }
 
-                    if (!$tieneFrancoDeHonor) {
-                        $puntajeMerito = 3;
-                        $detalleMerito = "Franco de Honor";
+                $countDemerito = 0;
+                $demeritoSubTotalPorSemana = 0;
+                if (count($demeritoList) > 0) {
+                    foreach ($demeritoList as $key => $demerito) {
+                        if (!is_null($demerito->demerito) && !is_null($demerito->categoria) && $demerito->categoria !== 'Extraordinario') {
+                            /**
+                             * TODO: modificar el campo year_ingreso por fecha
+                             */
+                            if ($cadete->year_ingreso === 4) {
+                                $demerito->demerito = 2 * $demerito->demerito;
+                            }
+                            $countDemerito++;
+                            $demeritoSubTotalPorSemana += $demerito->demerito;
+                        }
                     }
                 }
 
                 $weekData = [
                     "titulo" => "CIERRE DE LIBRO",
                     "fecha" => Carbon::parse($week[0])->format('Y-m-d'),
-                    "results" => $meritoDemeritoList,
-                    "puntajeMerito" => $puntajeMerito,
-                    "detalleMerito" => $detalleMerito
+                    "results" => $demeritoList,
+                    "demeritoSubTotalPorSemana" => $demeritoSubTotalPorSemana,
                 ];
 
-                $meritoDemeritoData[] = $weekData;
+                $demeritoData[] = $weekData;
+
+                if ($keyWeek == count($weekList) - 1) {
+                    $weekDataFinal = [
+                        "titulo" => "CIERRE DE LIBRO",
+                        "fecha" => Carbon::parse($week[1])->format('Y-m-d'),
+                        "results" => [],
+                        "demeritoSubTotalPorSemana" => 0,
+                    ];
+                    $demeritoData[] = $weekDataFinal;
+                }
+
             }
+
         }
 
         $pdf = \PDF::loadView(
             'report.control-merito-demerito',
             [
-                'meritoDemeritoData'=> $meritoDemeritoData,
+                'meritoDemeritoData'=> $demeritoData,
+                'porNumOrdenList'=> $porNumOrdenList,
+                'porReposoList'=> $porReposoList,
                 'cadete'=> $cadete->toArray(),
                 'jefeDeSeccion'=> $jefeDeSeccion->toArray(),
                 'comandanteEscuadron'=> $comandanteEscuadron->toArray()

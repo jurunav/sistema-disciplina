@@ -147,7 +147,9 @@ class CadeteRepository
                 'di.puntaje AS merito',
                 DB::raw('NULL AS demerito'),
                 'di.nombre AS detalle',
-                DB::raw('NULL AS sancionador')
+                DB::raw('NULL AS sancionador'),
+                DB::raw('NULL AS por_orden'),
+                DB::raw('NULL AS categoria')
             );
 
         $queryA->where('m.cadete_id', '=', $cadete->id);
@@ -178,7 +180,9 @@ class CadeteRepository
                 DB::raw('NULL AS merito'),
                 DB::raw('IF(d.cant_dia = 0, sa.puntaje, (sa.puntaje_dia * d.cant_dia)) AS demerito'),
                 'sa.nombre AS detalle',
-                DB::raw('CONCAT(p.grado, ". ", p.nombre) AS sancionador'))
+                DB::raw('CONCAT(p.grado, ". ", p.nombre) AS sancionador'),
+                'sa.por_reposo',
+                'sa.categoria')
             ->union($queryA);
 
         $queryB->where('d.cadete_id', '=', $cadete->id);

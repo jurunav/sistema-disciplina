@@ -20,11 +20,19 @@ class UtilDateService extends BaseService
         $tmpStartDate = $startDate->copy()->addHours($startTime);
         $tmpEndDate = $endDate->copy()->addHours($startTime);
 
+        /**
+         * @var Carbon $weekCurrent
+         */
         $weekCurrent = $tmpStartDate;
+
+        if ($weekCurrent->day !== Carbon::THURSDAY){
+            $weekCurrent->modify('next thursday '.$startTime);
+        }
+
         while ($weekCurrent < $tmpEndDate) {
             $weekData = [$weekCurrent->toDateTimeString()];
 
-            if ($tmpEndDate >= $weekCurrent) {
+            if ($tmpEndDate > $weekCurrent) {
                 $weekCurrent->modify('next thursday '.$startTime);
                 $weekData[] = $weekCurrent->toDateTimeString();
             }
