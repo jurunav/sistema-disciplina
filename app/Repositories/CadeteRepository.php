@@ -51,14 +51,21 @@ class CadeteRepository
 
         if (array_key_exists('startDate', $filters) && !is_null($filters['startDate']) &&
             array_key_exists('endDate', $filters) && !is_null($filters['endDate'])) {
-            $query->leftJoin(DB::raw("(select * from ".Demerito::getFullTableName()." where (created_at > '".$filters['startDate']."' AND created_at < '".$filters['endDate']."')) as d"),
+            $query->leftJoin(DB::raw("(select * from ".Demerito::getFullTableName().
+                " where (created_at > '".$filters['startDate']."' AND created_at < '".
+                $filters['endDate']."') UNION select * from ".Demerito::getFullTableName().
+                " where num_orden IS NOT NULL AND (cant_dia > 0 AND ADDDATE(created_at, INTERVAL cant_dia DAY) > '".$filters['endDate']."')) as d"),
                 'd.cadete_id', '=', 'c.id');
         } else {
             $query->leftJoin(Demerito::getFullTableName(). 'as d', 'd.cadete_id', '=', 'c.id');
         }
 
-        $query->leftJoin(Sancion::getFullTableName(). ' as s', 'd.sancion_id', '=', 's.id');
+//        $query->leftJoin(Sancion::getFullTableName(). ' as s', 'd.sancion_id', '=', 's.id');
 
+        $query->leftJoin(Sancion::getFullTableName(). ' as s', function ($leftJoin) {
+            $leftJoin->on('d.sancion_id', '=', 's.id')
+                ->where('s.exclusion_salida_franco', '=', 'false');
+        });
 
         $query->select(
             'c.id',
@@ -66,27 +73,35 @@ class CadeteRepository
             'p.grado',
             'c.year_ingreso',
             DB::raw('COUNT(s.id) as total_sanciones'),
-            DB::raw('SUM(s.puntaje + (s.puntaje_dia * d.cant_dia)) AS puntaje_total'))
-            ->distinct();
+            DB::raw('SUM(s.puntaje + (s.puntaje_dia * d.cant_dia)) AS puntaje_total'),
+            DB::raw('SUM(IF ((s.salida_franco = false AND s.por_orden = true AND s.por_reposo = false), true, false)) AS arresto_total'),
+            DB::raw('SUM(IF ((s.salida_franco = false AND s.por_orden = false AND s.por_reposo = true), true, false)) AS reposo_total')
+        )->distinct();
 
         if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
             $query->where('d.num_orden', 'is not null');
         }
 
-        if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
-            $query->where('s.nombre', 'like', '% reposo %');
-        }
+//        if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
+//            $query->where('s.nombre', 'like', '% reposo %');
+//        }
 
         $query->groupBy('c.id', 'p.nombre','p.grado','c.year_ingreso');
 
         if (array_key_exists('puntaje', $filters)) {
             $withScore  = "0=0";
             if (is_array($filters['puntaje']) && count($filters['puntaje']) > 0) {
-                $withScore = "puntaje_total >= ". $filters['puntaje']['min'] ." AND puntaje_total <= ". $filters['puntaje']['max'];
+                $withScore = "(puntaje_total >= ".
+                    $filters['puntaje']['min'] ." AND puntaje_total <= ".
+                    $filters['puntaje']['max'].") AND (arresto_total = 0 AND reposo_total = 0)";
             } else if (array_key_exists('code', $filters) && $filters['code'] == 'franco_de_honor') {
                 $withScore = "puntaje_total is null";
-            } else if(array_key_exists('code', $filters) && $filters['code'] == 'sin_salida') {
-                $withScore = "puntaje_total >= ". $filters['puntaje'];
+            } else if (array_key_exists('code', $filters) && $filters['code'] == 'sin_salida') {
+                $withScore = "puntaje_total >= ". $filters['puntaje']. " AND (arresto_total = 0 AND reposo_total = 0)";
+            } else if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
+                $withScore = "arresto_total > 0";
+            } else         if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
+                $withScore = "reposo_total > 0";
             }
             $query->havingRaw($withScore);
         }
