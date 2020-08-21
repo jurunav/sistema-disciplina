@@ -40,7 +40,7 @@ class PersonaRepository
 
         if (!is_null($searchValue) && !is_null($criterio)) {
             $query->where(function ($query) use ($criterio, $searchValue) {
-                $query->where('p.'.$criterio, 'like', $searchValue.'%');
+                $query->where('p.'.$criterio, 'like', '%'.$searchValue.'%');
             });
         }
 
