@@ -79,7 +79,7 @@ class CadeteRepository
         )->distinct();
 
         if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
-            $query->where('d.num_orden', 'is not null');
+            $query->whereNotNull('d.num_orden');
         }
 
 //        if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
@@ -88,23 +88,23 @@ class CadeteRepository
 
         $query->groupBy('c.id', 'p.nombre','p.grado','c.year_ingreso');
 
-        if (array_key_exists('puntaje', $filters)) {
-            $withScore  = "0=0";
-            if (is_array($filters['puntaje']) && count($filters['puntaje']) > 0) {
-                $withScore = "(puntaje_total >= ".
-                    $filters['puntaje']['min'] ." AND puntaje_total <= ".
-                    $filters['puntaje']['max'].") AND (arresto_total = 0 AND reposo_total = 0)";
-            } else if (array_key_exists('code', $filters) && $filters['code'] == 'franco_de_honor') {
-                $withScore = "puntaje_total is null";
-            } else if (array_key_exists('code', $filters) && $filters['code'] == 'sin_salida') {
-                $withScore = "puntaje_total >= ". $filters['puntaje']. " AND (arresto_total = 0 AND reposo_total = 0)";
-            } else if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
-                $withScore = "arresto_total > 0";
-            } else         if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
-                $withScore = "reposo_total > 0";
-            }
-            $query->havingRaw($withScore);
+
+        $withScore  = "0=0";
+        if (array_key_exists('code', $filters)
+            && ($filters['code'] == 'franco_domingo' || $filters['code'] == 'franco_medio_domingo')) {
+            $withScore = "(puntaje_total >= ".
+                $filters['puntaje']['min'] ." AND puntaje_total <= ".
+                $filters['puntaje']['max'].") AND (arresto_total = 0 AND reposo_total = 0)";
+        } else if (array_key_exists('code', $filters) && $filters['code'] == 'franco_de_honor') {
+            $withScore = "puntaje_total is null";
+        } else if (array_key_exists('code', $filters) && $filters['code'] == 'sin_salida') {
+            $withScore = "puntaje_total >= ". $filters['puntaje']. " AND (arresto_total = 0 AND reposo_total = 0)";
+        } else if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
+            $withScore = "arresto_total > 0";
+        } else if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
+            $withScore = "reposo_total > 0";
         }
+        $query->havingRaw($withScore);
 
         $order = [
             ['col' => 'c.year_ingreso', 'dir' => 'desc'],
