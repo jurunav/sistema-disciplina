@@ -66,7 +66,7 @@ class CadeteController extends Controller
 
             $cadete = new Cadete();
             $cadete->persona_id = $persona->id;
-            $cadete->year_ingreso = $request->year_ingreso;
+            $cadete->year_ingreso = new \DateTime($request->year_ingreso);
             $cadete->save();
 
             DB::commit();
@@ -99,7 +99,7 @@ class CadeteController extends Controller
             $persona->condicion = '1';
             $persona->save();
 
-            $cadete->year_ingreso = $request->year_ingreso;
+            $cadete->year_ingreso = new \DateTime($request->year_ingreso);
             //$cadete->condicion = '1';
             $cadete->save();
 

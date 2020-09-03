@@ -61,7 +61,7 @@ class Persona extends BaseModel
         $array['nombre_original'] = $this->nombre;
         $array['nombre'] = $this->getGradoNombre() . " " . $this->nombre;
         if (!is_null($this->cadete)) {
-            $array['nombre'] = $this->getGradoNombre($this->cadete->year_ingreso) . " " . $this->nombre;
+            $array['nombre'] = $this->getGradoNombre($this->cadete->year()) . " " . $this->nombre;
         }
 
         if (!is_null($this->encargado))

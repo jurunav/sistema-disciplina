@@ -161,7 +161,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Año de ingreso</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="year_ingreso" class="form-control" placeholder="">
+                                        <input type="datetime-local" v-model="year_ingreso" class="form-control" placeholder="">
                                     </div>
                                 </div>                                
                                 <div v-show="errorPersona" class="form-group row div-error">
@@ -189,6 +189,8 @@
 </template>
 
 <script>
+    import moment from 'moment'
+
     export default {
         data (){
             return {
@@ -201,7 +203,8 @@
                 domicilio : '',
                 celular : '',
                 email : '',
-                year_ingreso : '',
+                year_ingreso : moment().format('YYYY-MM-DDTHH:mm'),
+                year_cadete: '',
                 arrayPersona : [],
                 modal : 0,
                 tituloModal : '',
@@ -271,6 +274,7 @@
                 me.listarPersona(page,buscar,criterio);
             },
             registrarPersona(){
+                console.log(this.year_ingreso);
                 if (this.validarPersona()){
                     return;
                 }
@@ -285,7 +289,8 @@
                     'domicilio': this.domicilio,
                     'celular': this.celular,
                     'email': this.email,
-                    'year_ingreso': this.year_ingreso
+                    'year_ingreso': this.year_ingreso,
+                    'year_cadete': this.year_cadete
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -310,7 +315,8 @@
                     'email': this.email,
                     'year_ingreso': this.year_ingreso,
                     'id': this.cadete_id,
-                    'persona_id': this.persona_id
+                    'persona_id': this.persona_id,
+                    'year_cadete': this.year_cadete
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -418,7 +424,8 @@
                 this.domicilio='';
                 this.celular='';
                 this.email='';
-                this.year_ingreso='';
+                this.year_ingreso= moment().format('YYYY-MM-DDTHH:mm');
+                this.year_cadete = '';
 
             },
             abrirModal(modelo, accion, data = []){
@@ -437,7 +444,8 @@
                                 this.domicilio='';
                                 this.celular='';
                                 this.email='';
-                                this.year_ingreso='';
+                                this.year_ingreso= moment().format('YYYY-MM-DDTHH:mm');
+                                this.year_cadete= '';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -456,7 +464,8 @@
                                 this.domicilio = data['domicilio'];
                                 this.celular= data['celular'];
                                 this.email= data['email'];
-                                this.year_ingreso= data['year_ingreso'];
+                                this.year_ingreso= moment(data['year_ingreso']).format('YYYY-MM-DDTHH:mm');
+                                this.year_cadete= data['year_cadete'];
                                 break;
                             }
                         }

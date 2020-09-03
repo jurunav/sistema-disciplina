@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\BaseModel;
 use App\Models\Merito;
+use Carbon\Carbon;
 
 class Cadete extends BaseModel
 {
@@ -14,6 +15,13 @@ class Cadete extends BaseModel
      * @var string
      */
     protected $table = 'cadetes';
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['year_ingreso'];
 
     public $timestamps = false;
     
@@ -35,13 +43,20 @@ class Cadete extends BaseModel
         return $this->hasMany(Merito::class, 'cadete_id', 'id');
     }
 
+    public function year() {
+        $yearIngreso = $this->year_ingreso->diffInYears(Carbon::now());
+        if ($yearIngreso === 0) $yearIngreso = 1;
+        return $yearIngreso;
+    }
+
     public function toArray()
     {
         $array = parent::attributesToArray();
         $array['nombre_original'] =  $this->persona->nombre;
-        $nombreCadete = $this->persona->getGradoNombre($this->year_ingreso) . " " . $this->persona->nombre;
+        $nombreCadete = $this->persona->getGradoNombre($this->year()) . " " . $this->persona->nombre;
         $array['nombre'] =  $nombreCadete;
         $array['persona'] = $this->persona;
+        $array['year_cadete'] = $this->year();
         return $array;
     }
 }
