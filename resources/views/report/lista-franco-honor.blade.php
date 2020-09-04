@@ -125,7 +125,7 @@
                             @foreach($cadeteList as $keyC => $cadete)
                                 <?php
                                     $arrayGrado = ["", "I" , "II", "III", "IV"];
-                                    $numeroGrado = $arrayGrado[$cadete->year_ingreso];
+                                    $numeroGrado = $arrayGrado[$cadete->year()];
                                     $nombreGrado = "";
                                     if ($cadete->grado === "Cdte") {
                                         $nombreGrado = $cadete->grado. " ". $numeroGrado;

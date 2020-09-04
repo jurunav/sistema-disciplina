@@ -45,7 +45,7 @@ class Cadete extends BaseModel
 
     public function year() {
         $yearIngreso = $this->year_ingreso->diffInYears(Carbon::now());
-        if ($yearIngreso === 0) $yearIngreso = 1;
+        $yearIngreso = $yearIngreso + 1;
         return $yearIngreso;
     }
 

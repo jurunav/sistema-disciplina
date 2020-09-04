@@ -73,7 +73,7 @@ class CadeteRepository
             'p.grado',
             'c.year_ingreso',
             DB::raw('COUNT(s.id) as total_sanciones'),
-            DB::raw('SUM(s.puntaje + (s.puntaje_dia * d.cant_dia)) AS puntaje_total'),
+            DB::raw('IF ((TIMESTAMPDIFF(YEAR, c.year_ingreso, CURDATE()) + 1) >= 4 , (SUM(s.puntaje + (s.puntaje_dia * d.cant_dia)) * 2) , SUM(s.puntaje + (s.puntaje_dia * d.cant_dia))) AS puntaje_total'),
             DB::raw('SUM(IF ((s.salida_franco = false AND s.por_orden = true AND s.por_reposo = false), true, false)) AS arresto_total'),
             DB::raw('SUM(IF ((s.salida_franco = false AND s.por_orden = false AND s.por_reposo = true), true, false)) AS reposo_total')
         )->distinct();

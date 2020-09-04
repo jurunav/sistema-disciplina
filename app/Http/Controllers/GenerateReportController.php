@@ -163,7 +163,7 @@ class GenerateReportController extends Controller
                             /**
                              * TODO: modificar el campo year_ingreso por fecha
                              */
-                            if ($cadete->year_ingreso === 4) {
+                            if ($cadete->year() >= 4) {
                                 $demerito->demerito = 2 * $demerito->demerito;
                             }
                             $countDemerito++;

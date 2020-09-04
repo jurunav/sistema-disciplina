@@ -44,7 +44,7 @@ class Persona extends BaseModel
     }
 
     public function getGradoNombre($yearIngreso = 0) {
-        $arrayGrado = ["", "I" , "II", "III", "IV"];
+        $arrayGrado = ["", "I" , "II", "III", "IV", "V", "VI", "VII", "VIII"];
         $numeroGrado = $arrayGrado[$yearIngreso];
         $nombreGrado = "";
         if ($this->grado === "Cdte") {

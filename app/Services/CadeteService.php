@@ -113,9 +113,6 @@ class CadeteService extends BaseService
         if (array_key_exists('endDate', $filters) && !is_null($filters['endDate']))
             $filters['endDate'] = Carbon::parse($filters['endDate'])->format('Y-m-d H:i');
 
-        /**
-         * TODO: ver si se puede añadir de forma rapido el numero general y numero cadete
-         */
         $cadeteList = $this->getAllFrancoDeHonor($filters);
 
         $groupCadeteList = [];
@@ -124,12 +121,13 @@ class CadeteService extends BaseService
             && in_array($config['code'], ['sancion_orden_dia', 'reposo'])) {
             if ($cadeteList->count() > 0) {
                 $groupCadeteList[] = $cadeteList;
+                $totalCadetes = count($cadeteList);
             }
         } else {
             foreach ($cadeteList as $cadete) {
-                if (!array_key_exists($cadete->year_ingreso, $groupCadeteList))
-                    $groupCadeteList[$cadete->year_ingreso] = [];
-                $groupCadeteList[$cadete->year_ingreso][] = $cadete;
+                if (!array_key_exists($cadete->year(), $groupCadeteList))
+                    $groupCadeteList[$cadete->year()] = [];
+                $groupCadeteList[$cadete->year()][] = $cadete;
                 $totalCadetes++;
             }
         }
