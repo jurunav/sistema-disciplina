@@ -326,6 +326,7 @@
             getSancion(val1){
                 let me = this;
                 me.esExtraordinario = false;
+                me.cant_dia = 0;
                 me.sancion = val1;
                 if (me.sancion) {
                     if (me.sancion.categoria === 'Extraordinario' && me.sancion.puntaje_dia !== 0) {
@@ -453,10 +454,11 @@
                 this.tituloModal='';
                 this.cadete= {};
                 this.sancion= {};
-                this.cant_dia= 0,
+                this.cant_dia= 0;
                 this.sancionador= {};
                 this.num_orden = '';
                 this.errorDemerito=0;
+                this.esExtraordinario = false;
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
@@ -483,6 +485,13 @@
                                 this.sancionador=data['sancionador'];
                                 this.num_orden = data['num_orden'];
                                 this.cant_dia = data['cant_dia'];
+
+                                if (this.sancion) {
+                                    if (this.sancion.categoria === 'Extraordinario' && this.sancion.puntaje_dia !== 0) {
+                                        this.esExtraordinario = true;
+                                    }
+                                }
+
                                 break;
                             }
                         }
