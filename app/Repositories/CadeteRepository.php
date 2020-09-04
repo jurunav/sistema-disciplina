@@ -163,7 +163,7 @@ class CadeteRepository
                 DB::raw('NULL AS demerito'),
                 'di.nombre AS detalle',
                 DB::raw('NULL AS sancionador'),
-                DB::raw('NULL AS por_orden'),
+                DB::raw('NULL AS por_reposo'),
                 DB::raw('NULL AS categoria')
             );
 

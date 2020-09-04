@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Demerito;
+use App\Persona;
+use App\Cadete;
 
 class DemeritoRepository
 {
@@ -16,11 +18,19 @@ class DemeritoRepository
      */
     public function getAll($limit =10, $offset =0, $order = [['col' => 'd.created_at', 'dir' => 'desc']],
                            $searchValue = null, $criterio = null) {
-        $query = Demerito::from(Demerito::getFullTableName(). ' as d')->select('d.*');
+        $query = Demerito::from(Demerito::getFullTableName(). ' as d')
+            ->join(Cadete::getFullTableName(). ' as c', 'c.id', '=', 'd.cadete_id')
+            ->join(Persona::getFullTableName(). ' as p', 'p.id', '=', 'c.persona_id')
+            ->select('d.*');
 
         if (!is_null($searchValue) && !is_null($criterio)) {
             $query->where(function ($query) use ($criterio, $searchValue) {
-                $query->where('d.'.$criterio, 'like', $searchValue.'%');
+                if ($criterio == 'num_orden') {
+                    $query->where('d.'.$criterio, 'like', '%'.$searchValue.'%');
+                }
+                if ($criterio == 'cadete_nombre') {
+                    $query->where('p.nombre', 'like', '%'.$searchValue.'%');
+                }
             });
         }
 

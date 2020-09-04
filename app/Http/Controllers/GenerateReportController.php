@@ -150,7 +150,7 @@ class GenerateReportController extends Controller
                         $porNumOrdenList[] = $meritoDemerito;
                         $meritoDemeritoList->forget($key);
                     } else if ($meritoDemerito->por_reposo) {
-                        $porReposoListList[] = $meritoDemerito;
+                        $porReposoList[] = $meritoDemerito;
                         $meritoDemeritoList->forget($key);
                     }
                 }

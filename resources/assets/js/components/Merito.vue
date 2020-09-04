@@ -19,6 +19,7 @@
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
                                       <option value="num_orden">Numero de Orden</option>
+                                      <option value="cadete_nombre">Nombre cadete</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarMerito(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" @click="listarMerito(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -215,7 +216,7 @@
                 console.log('listar');
                 var data = {
                     page: page,
-                    buscar: buscar,
+                    search: buscar,
                     criterio: criterio
                 };
 

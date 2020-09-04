@@ -310,7 +310,7 @@
             </table>
         </div>
     <br>
-    <div class="row">
+    <div class="row" style="page-break-inside: avoid;">
         <div class="column">
             <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $cadete['nombre']}}</span> <br> COMUNICADO
             </h4>
@@ -323,7 +323,7 @@
     </div>
 
     <br>
-    <div class="row">
+    <div class="row" style="page-break-inside: avoid;">
         <h4 style="text-align: center;font-size: 10px;"><span style="font-weight: normal;">{{ $comandanteEscuadron['nombre']}}</span> <br> COMANDANTE ESCUADRON CONDUCTA Y DISCIPLINA
         </h4>
     </div>
