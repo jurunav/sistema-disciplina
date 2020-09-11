@@ -15,26 +15,32 @@ class UtilDateService extends BaseService
         parent::__construct();
     }
 
-    public function getWeekRangeDate(Carbon $startDate, Carbon $endDate, $startTime = '12:00') {
+    public function getWeekRangeDate(Carbon $startDate, Carbon $endDate) {
         $weekList = [];
-        $tmpStartDate = $startDate->copy()->addHours($startTime);
-        $tmpEndDate = $endDate->copy()->addHours($startTime);
+        $tmpStartDate = $startDate->copy();
+        $tmpEndDate = $endDate->copy();
 
         /**
          * @var Carbon $weekCurrent
          */
         $weekCurrent = $tmpStartDate;
+        $timeWeekCurrent = $tmpStartDate->toTimeString();
 
+        /**
+         * TODO: revisar julio 30 = agosto 06
+         */
         if ($weekCurrent->day !== Carbon::THURSDAY){
-            $weekCurrent->modify('next thursday '.$startTime);
+            $weekCurrent->modify('next thursday '.$timeWeekCurrent);
         }
 
         while ($weekCurrent < $tmpEndDate) {
             $weekData = [$weekCurrent->toDateTimeString()];
 
+            $weekCurrent->modify('next thursday '.$timeWeekCurrent);
             if ($tmpEndDate > $weekCurrent) {
-                $weekCurrent->modify('next thursday '.$startTime);
                 $weekData[] = $weekCurrent->toDateTimeString();
+            } else {
+                $weekData[] = $endDate->toDateTimeString();
             }
 
             if (count($weekData) > 0) {

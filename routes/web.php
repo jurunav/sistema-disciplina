@@ -15,6 +15,21 @@ Route::group(['middleware'=>['guest']],function(){
     Route::post('/login', 'Auth\LoginController@login')->name('login');
 });
 
+//ELIMINAR ESTA RUTA DE PRUEBAS
+Route::get('test-date', function () {
+    /**
+     * @var \App\Services\UtilDateService $utilDateService
+     */
+    $utilDateService = app(\App\Services\UtilDateService::class);
+
+    $startDate = new \Carbon\Carbon("2020-07-30 20:51");
+    $endDate = new \Carbon\Carbon("2020-09-09 20:51");
+
+    $weekList = $utilDateService->getWeekRangeDate($startDate, $endDate);
+
+    dd($weekList);
+    exit();
+});
 
 Route::group(['middleware'=>['auth']],function(){
 
