@@ -96,13 +96,13 @@ class CadeteRepository
                 $filters['puntaje']['min'] ." AND puntaje_total <= ".
                 $filters['puntaje']['max'].") AND (arresto_total = 0 AND reposo_total = 0)";
         } else if (array_key_exists('code', $filters) && $filters['code'] == 'franco_de_honor') {
-            $withScore = "puntaje_total is null";
+            $withScore = "puntaje_total is null AND reposo_total = 0";
         } else if (array_key_exists('code', $filters) && $filters['code'] == 'sin_salida') {
             $withScore = "puntaje_total >= ". $filters['puntaje']. " AND (arresto_total = 0 AND reposo_total = 0)";
         } else if (array_key_exists('code', $filters) && $filters['code'] == 'sancion_orden_dia') {
             $withScore = "arresto_total > 0";
         } else if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
-            $withScore = "reposo_total > 0";
+            $withScore = "reposo_total > 0 AND arresto_total = 0";
         }
         $query->havingRaw($withScore);
 
@@ -113,6 +113,10 @@ class CadeteRepository
         foreach($order as $orderItem) {
             $query->orderBy($orderItem['col'], $orderItem['dir']);
         }
+        //if (array_key_exists('code', $filters) && $filters['code'] == 'reposo') {
+          //  dd($query->toSql());
+            //exit();
+        //}
         return $query->get();
     }
 
