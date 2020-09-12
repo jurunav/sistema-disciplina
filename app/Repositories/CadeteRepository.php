@@ -72,6 +72,7 @@ class CadeteRepository
             'p.nombre',
             'p.grado',
             'c.year_ingreso',
+            DB::raw('(TIMESTAMPDIFF(YEAR, c.year_ingreso, CURDATE()) + 1) as year_cadete'),
             DB::raw('COUNT(s.id) as total_sanciones'),
             DB::raw('IF ((TIMESTAMPDIFF(YEAR, c.year_ingreso, CURDATE()) + 1) >= 4 , (SUM(s.puntaje + (s.puntaje_dia * d.cant_dia)) * 2) , SUM(s.puntaje + (s.puntaje_dia * d.cant_dia))) AS puntaje_total'),
             DB::raw('SUM(IF ((s.salida_franco = false AND s.por_orden = true AND s.por_reposo = false), true, false)) AS arresto_total'),
@@ -86,7 +87,7 @@ class CadeteRepository
 //            $query->where('s.nombre', 'like', '% reposo %');
 //        }
 
-        $query->groupBy('c.id', 'p.nombre','p.grado','c.year_ingreso');
+        $query->groupBy('c.id', 'p.nombre','p.grado','year_cadete');
 
 
         $withScore  = "0=0";
@@ -107,7 +108,7 @@ class CadeteRepository
         $query->havingRaw($withScore);
 
         $order = [
-            ['col' => 'c.year_ingreso', 'dir' => 'desc'],
+            ['col' => 'year_cadete', 'dir' => 'desc'],
             ['col' => 'p.nombre', 'dir' => 'asc']
         ];
         foreach($order as $orderItem) {
