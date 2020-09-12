@@ -160,9 +160,6 @@ class GenerateReportController extends Controller
                 if (count($demeritoList) > 0) {
                     foreach ($demeritoList as $key => $demerito) {
                         if (!is_null($demerito->demerito) && !is_null($demerito->categoria) && $demerito->categoria !== 'Extraordinario') {
-                            /**
-                             * TODO: modificar el campo year_ingreso por fecha
-                             */
                             if ($cadete->year() >= 4) {
                                 $demerito->demerito = 2 * $demerito->demerito;
                             }
@@ -177,19 +174,20 @@ class GenerateReportController extends Controller
                     "fecha" => Carbon::parse($week[0])->format('Y-m-d'),
                     "results" => $demeritoList,
                     "demeritoSubTotalPorSemana" => $demeritoSubTotalPorSemana,
+                    "countDemerito" => $countDemerito
                 ];
 
                 $demeritoData[] = $weekData;
 
-                if ($keyWeek == count($weekList) - 1) {
-                    $weekDataFinal = [
-                        "titulo" => "CIERRE DE LIBRO",
-                        "fecha" => Carbon::parse($week[1])->format('Y-m-d'),
-                        "results" => [],
-                        "demeritoSubTotalPorSemana" => 0,
-                    ];
-                    $demeritoData[] = $weekDataFinal;
-                }
+//                if ($keyWeek == count($weekList) - 1) {
+//                    $weekDataFinal = [
+//                        "titulo" => "CIERRE DE LIBRO",
+//                        "fecha" => Carbon::parse($week[1])->format('Y-m-d'),
+//                        "results" => [],
+//                        "demeritoSubTotalPorSemana" => 0,
+//                    ];
+//                    $demeritoData[] = $weekDataFinal;
+//                }
 
             }
 

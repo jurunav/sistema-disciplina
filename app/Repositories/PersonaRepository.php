@@ -7,6 +7,7 @@ use App\Cadete;
 use App\Models\Encargado;
 use App\Persona;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class PersonaRepository
 {
@@ -23,19 +24,19 @@ class PersonaRepository
                            $searchValue = null, $criterio = null, $filters = []) {
         $query = Persona::from(Persona::getFullTableName(). ' as p')->select('p.*')->distinct();
 
-        if (array_key_exists('withCadeteOnly', $filters)) {
-            $query->leftJoin(Cadete::getFullTableName(). ' as c', 'p.id', '=', 'c.persona_id');
-        }
-
         if (array_key_exists('withEncargadoOnly', $filters)) {
             $query->leftJoin(Encargado::getFullTableName(). ' as e', 'p.id', '=', 'e.persona_id');
         }
 
-        if (array_key_exists('finalStage', $filters)) {
-            $query->where(function($query) use ($filters) {
-                $query->where('c.year_ingreso', '=', 4)
-                    ->orWhereNull('c.year_ingreso');
-            });
+        if (array_key_exists('withCadeteOnly', $filters)) {
+            $query->leftJoin(DB::raw("(select *, (TIMESTAMPDIFF(YEAR, year_ingreso, CURDATE()) + 1) AS year_cadete from ".Cadete::getFullTableName()." ) as c"), 'p.id', '=', 'c.persona_id');
+
+            if (array_key_exists('finalStage', $filters)) {
+                $query->where(function($query) use ($filters) {
+                    $query->where('c.year_cadete', '>=', 4)
+                        ->orWhereNotNull('e.id');
+                });
+            }
         }
 
         if (!is_null($searchValue) && !is_null($criterio)) {
@@ -48,7 +49,7 @@ class PersonaRepository
         foreach($order as $orderItem) {
             $query->orderBy($orderItem['col'], $orderItem['dir']);
         }
-//        var_dump($query->toSql());
+//        dd($query->toSql());
 //        exit();
         return $query->paginate();
     }

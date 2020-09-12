@@ -103,7 +103,7 @@
         </div>
 
         <div class="column" style="text-align: right">
-            <h4>CURSO: {{$cadete['year_ingreso']}} Año <br> GESTION: {{now()->year}} <br> FECHA DE EMISION: {{now()->format('Y-m-d H:i')}}</h4>
+            <h4>CURSO: {{$cadete['year_cadete']}} Año <br> GESTION: {{now()->year}} <br> FECHA DE EMISION: {{now()->format('Y-m-d H:i')}}</h4>
         </div>
     </div>
 
@@ -135,6 +135,14 @@
             $demeritoSubTotalPorSemana = 0;
             ?>
             @foreach ($meritoDemeritoData as $key => $meritoDemerito)
+                <?php
+//                        TODO: hacer mas pruebas con esta validacion ZzZzZz
+                    if ($meritoDemerito['countDemerito'] == 0 && $demeritoSubTotalPorSemana == 0) {
+                        $puntajeFrancoDeHonor = 3 ;
+                    } else if ($demeritoSubTotalPorSemana > 0) {
+                        $puntajeFrancoDeHonor = 0 ;
+                    }
+                ?>
                 <tr style="background-color: #D8D8D8">
                     <td colspan="2">{{$meritoDemerito['titulo']}}</td>
                     <td colspan="3">{{$meritoDemerito['fecha']}}</td>
@@ -172,12 +180,12 @@
                 <?php
                 $demeritoSubTotal += $demeritoSubTotalPorSemana;
                 $meritoSubTotal += $puntajeFrancoDeHonor;
-
-                    if ($demeritoSubTotalPorSemana == 0) {
-                        $puntajeFrancoDeHonor = 3 ;
-                    } else if ($demeritoSubTotalPorSemana > 0) {
-                        $puntajeFrancoDeHonor = 0 ;
-                    }
+//                TODO: verificar si esto esta bien o validar arriba
+//                    if ($demeritoSubTotalPorSemana == 0) {
+//                        $puntajeFrancoDeHonor = 3 ;
+//                    } else if ($demeritoSubTotalPorSemana > 0) {
+//                        $puntajeFrancoDeHonor = 0 ;
+//                    }
                 ?>
             @endforeach
             <tr>
